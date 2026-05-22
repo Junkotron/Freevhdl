@@ -20,10 +20,15 @@ sudo apt -y install openssh-server
 # begin to dilly-dally here
 
 cd
-cd /home
-tar -cvf /tmp/home_pi.tar pi
-sudo cp /tmp/home_pi.tar /home
-cd
+
+#only do this once after full install
+if [ -e /home/home_pi.tar ]; then
+    cd /home
+    tar -cvf /tmp/home_pi.tar pi
+    sudo cp /tmp/home_pi.tar /home
+    cd
+fi
+
 
 /home/fpga_install.sh
 
