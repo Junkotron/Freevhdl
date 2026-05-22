@@ -36,14 +36,14 @@ git submodule update --init --recursive
 cd
 
 cd nextpnr
-mkdir -p build && cd build
+mkdir -p build_ice40 && cd build_ice40
 cmake .. -DARCH=ice40
 make -j$(nproc)
 sudo make install
 cd
 
 cd nextpnr
-mkdir -p build && cd build
+mkdir -p build_gowin && cd build_gowin
 cmake .. -DARCH="himbaechel" -DHIMBAECHEL_UARCH="gowin"
 make -j$(nproc)
 sudo make install
