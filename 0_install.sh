@@ -13,7 +13,7 @@ popd
 
 cd fpga_demo
 
-sudo cp $LIST_DEMO /home/fpga_demo
+sudo tar -cf /home/fpga_demo.tar $LIST_DEMO
 
 pushd /home/fpga_demo
 sudo chmod a+r $LIST_DEMO

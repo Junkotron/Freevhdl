@@ -25,8 +25,12 @@ tar -cvf /tmp/home_pi.tar pi
 sudo cp /tmp/home_pi.tar /home
 cd
 
-
 /home/fpga_install.sh
 
 /home/fpga_install_pnr.sh
 
+cd
+mkdir -p fpga_demo
+cd fpga_demo
+tar xvf /home/fpga_demo.tar
+cd
