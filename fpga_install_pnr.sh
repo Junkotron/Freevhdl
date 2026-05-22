@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-sudo apt install \
+sudo apt -y install \
      cmake \
      libboost-filesystem-dev \
      libboost-thread-dev \
@@ -29,6 +29,8 @@ pip install apycula --break-system-packages
 
 git clone https://github.com/YosysHQ/nextpnr.git
 
+git clone https://github.com/YosysHQ/apicula.git
+
 cd nextpnr
 git submodule update --init --recursive
 cd
@@ -46,12 +48,4 @@ cmake .. -DARCH="himbaechel" -DHIMBAECHEL_UARCH="gowin"
 make -j$(nproc)
 sudo make install
 cd
-
-
-nextpnr-ice40 --hx8k --json Nand_from_vhdl.json --pcf nandy.pcf --asc nandy_vhdl.asc
-
-nextpnr-ice40 --hx8k --json Nand_from_verilog.json --pcf nandy_verilog.pcf --asc nandy_verilog.asc
-
-icepack nandy_vhdl.asc nandy_vhdl.bin
-icepack nandy_verilog.asc nandy_verilog.bin
 
