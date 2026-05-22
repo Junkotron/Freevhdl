@@ -1,0 +1,17 @@
+
+The process here differs from the pi's and
+rock's since the installation media does not
+"mutate" but a second disk is required for the target.
+
+Best method so far is to install from install
+media into target media with all selections,
+bells & whistles
+
+Boot on the new system and copy over
+desktop_fpga/
+
+Then we let the standard script 0_install.sh
+do the mods and put stuff in /home as usual.
+
+
+desktop_fpga can then be removed
