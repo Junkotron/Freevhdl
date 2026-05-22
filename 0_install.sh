@@ -15,10 +15,6 @@ cd fpga_demo
 
 sudo tar -cf /home/fpga_demo.tar $LIST_DEMO
 
-pushd /home/fpga_demo
-sudo chmod a+r $LIST_DEMO
-sudo chmod a+rx *.sh
-popd
 
 pushd /home
 sudo chmod a+r $LIST
