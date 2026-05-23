@@ -1,25 +1,10 @@
 #!/bin/bash
 
 
-sudo apt -y install \
-     cmake \
-     libboost-filesystem-dev \
-     libboost-thread-dev \
-     libboost-dev \
-     libboost-program-options-dev \
-     libboost-iostreams-dev \
-     libboost-python-dev \
-     libeigen3-dev \
-     libftdi1-dev \
-     python3-pip \
-     python3-msgpack \
-     pybind11-dev \
-     python3-msgspec
 
 git clone https://github.com/YosysHQ/icestorm.git
 cd icestorm
 make
-make install
 cd
 
 
@@ -39,13 +24,11 @@ cd nextpnr
 mkdir -p build_ice40 && cd build_ice40
 cmake .. -DARCH=ice40
 make -j$(nproc)
-sudo make install
 cd
 
 cd nextpnr
 mkdir -p build_gowin && cd build_gowin
 cmake .. -DARCH="himbaechel" -DHIMBAECHEL_UARCH="gowin"
 make -j$(nproc)
-sudo make install
 cd
 

@@ -23,19 +23,25 @@ cd
 
 #only do this once after full install
 if [ -e /home/home_pi.tar ]; then
+    echo "Backup already taken, skipping"
+else
+    echo "Taking initial backup of /home/pi ..."
     cd /home
     tar -cvf /tmp/home_pi.tar pi
     sudo cp /tmp/home_pi.tar /home
     cd
 fi
 
+/home/fpga_packages.sh
+/home/fpga_build_pnr.sh
+/home/fpga_build_yosys.sh
 
-/home/fpga_install.sh
-
-/home/fpga_install_pnr.sh
 
 cd
 mkdir -p fpga_demo
 cd fpga_demo
 tar xvf /home/fpga_demo.tar
 cd
+
+# If sudo times out it should suffice to re-run this
+/home/fpga_sudo_install.sh
