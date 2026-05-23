@@ -44,16 +44,7 @@ port (
 	B          :   out std_logic;                    
 	SYNC       :   out std_logic;                    
 
-        DB0 : in std_logic;
-        DB1 : in std_logic;
-        DB2 : in std_logic;
-        DB3 : in std_logic;
-        DB4 : in std_logic;
-        DB5 : in std_logic;
-        DB6 : in std_logic;
-        DB7 : in std_logic;
-
---        DB         :   in  std_logic_vector( 7 downto 0);
+        DBTOP         :   in  std_logic_vector( 7 downto 0);
 	ADDRHI     :   in  std_logic_vector(15 downto 8)
 );
 end;
@@ -80,14 +71,7 @@ begin
         
         ADDR(15 downto 8) => ADDRHI,
         ADDR(7 downto 0) => (others => '0'),
-        DB(7) => DB7,
-        DB(6) => DB6,
-        DB(5) => DB5,
-        DB(4) => DB4,
-        DB(3) => DB3,
-        DB(2) => DB2,
-        DB(1) => DB1,
-        DB(0) => DB0
+        DB => DBTOP
         
     );
   
