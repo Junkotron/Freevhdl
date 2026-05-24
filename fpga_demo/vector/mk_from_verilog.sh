@@ -6,7 +6,6 @@ TOP=myvector
 
 yosys -D LEDS_NR=8 -D INV_BTN=0 -p "read_verilog $SRC.v; synth_gowin -top $TOP -json from_verilog_$SRC.json -family gw2a"
 
-#yosys -D LEDS_NR=8 -D INV_BTN=0 -p "read_verilog $SRC.v; synth_gowin -top $TOP -json rapa.json -family gw2a"
 
 DEVICE="GW2A-LV18PG256C7/I6"
 
