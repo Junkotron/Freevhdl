@@ -16,15 +16,15 @@ IO_LOC "B" H16;
 IO_LOC "SYNC" D10;
 
 
+IO_LOC "testvectop[0]" K15;
+IO_LOC "testvectop[1]" C12;
+IO_LOC "testvectop[2]" D11;
+IO_LOC "xortesttop" C13;
 
 
 // Free...
 
-//IO_LOC "testtop_OBUF_O" K15;
 
-//IO_LOC "ula_1.db_IBUF_O_7" C12;
-//IO_LOC "ula_1.db_IBUF_O_6" C13;
-//IO_LOC "ula_1.db_IBUF_O_5" D11;
 //IO_LOC "ula_1.db_IBUF_O_4" D14;
 //IO_LOC "ula_1.db_IBUF_O_3" E15;
 //IO_LOC "ula_1.db_IBUF_O_2" J15;

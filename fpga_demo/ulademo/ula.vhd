@@ -79,7 +79,11 @@ library ieee;
 
 entity ula is
 port (
-	RESETn     :   in  std_logic;                     -- RESET master
+        testvec : in std_logic_vector (2 downto 0);
+
+        xortest : out std_logic;
+        
+        RESETn     :   in  std_logic;                     -- RESET master
 	CLK_4      :   out std_logic;                     -- 4 MHz internal
 	CLK_4_EN   :   out std_logic;                     -- 4 MHz internal clock enable pulse
 
@@ -130,7 +134,7 @@ architecture RTL of ula is
 
   signal DB         :    std_logic_vector( 7 downto 0);
   signal ADDR       :    std_logic_vector(15 downto 0); 
-  
+
 	-- Signal CLOCK
 	signal CLK_24        : std_logic;                    -- CLOCK 24 MHz internal
 	signal CLK_4_INT     : std_logic;                    -- CLOCK  4 MHz internal
@@ -215,7 +219,8 @@ architecture RTL of ula is
 	signal lFLASH_SEL   : std_logic;
 
 begin
-
+        xortest <= testvec(1) xor testvec(0);
+  
 	-- input assignments
 	lADDR        <= ADDR;
 	DB_INT       <= DB;

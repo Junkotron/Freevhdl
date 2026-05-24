@@ -28,6 +28,10 @@ library ieee;
 
 entity ulatop is
 port (
+        testvectop : in std_logic_vector(2 downto 0);
+
+        xortesttop : out std_logic;
+  
 	RESETn     :   in  std_logic;                    
 	CLK_4      :   out std_logic;                    
 	CLK_4_EN   :   out std_logic;                    
@@ -54,7 +58,12 @@ architecture RTL of ulatop is
 begin
   ULA_1 : entity work.ula(RTL)
     port map (
-	RESETn => RESETn,
+
+        testvec => testvectop,
+
+        xortest => xortesttop,
+        
+        RESETn => RESETn,
 	CLK_4 => CLK_4,
 	CLK_4_EN => CLK_4_EN,
 	CLK => CLK,
