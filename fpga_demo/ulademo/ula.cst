@@ -16,30 +16,30 @@ IO_LOC "B" H16;
 IO_LOC "SYNC" D10;
 
 
-IO_LOC "ula_1.db_IBUF_O_7" C12;
-IO_LOC "ula_1.db_IBUF_O_6" C13;
-IO_LOC "ula_1.db_IBUF_O_5" D11;
-IO_LOC "ula_1.db_IBUF_O_4" D14;
-IO_LOC "ula_1.db_IBUF_O_3" E15;
-IO_LOC "ula_1.db_IBUF_O_2" J15;
-IO_LOC "ula_1.db_IBUF_O_1" K14;
-IO_LOC "ula_1.db_IBUF_O" K16;   // This is index 0 :)
-
-IO_LOC "ula_1.addr_IBUF_O_7" L14;
-IO_LOC "ula_1.addr_IBUF_O_6" N9;
-IO_LOC "ula_1.addr_IBUF_O_5" P6;
-IO_LOC "ula_1.addr_IBUF_O_4" P7;
-IO_LOC "ula_1.addr_IBUF_O_3" P8;
-IO_LOC "ula_1.addr_IBUF_O_2" P9;
-IO_LOC "ula_1.addr_IBUF_O_1" R7;
-IO_LOC "ula_1.addr_IBUF_O" R9;   // This is index 0 :)
-
 
 
 // Free...
 
+//IO_LOC "testtop_OBUF_O" K15;
+
+//IO_LOC "ula_1.db_IBUF_O_7" C12;
+//IO_LOC "ula_1.db_IBUF_O_6" C13;
+//IO_LOC "ula_1.db_IBUF_O_5" D11;
+//IO_LOC "ula_1.db_IBUF_O_4" D14;
+//IO_LOC "ula_1.db_IBUF_O_3" E15;
+//IO_LOC "ula_1.db_IBUF_O_2" J15;
+//IO_LOC "ula_1.db_IBUF_O_1" K14;
+//IO_LOC "ula_1.db_IBUF_O" K16;   // This is index 0 :)
+
+//IO_LOC "ula_1.addr_IBUF_O_7" L14;
+//IO_LOC "ula_1.addr_IBUF_O_6" N9;
+//IO_LOC "ula_1.addr_IBUF_O_5" P6;
+//IO_LOC "ula_1.addr_IBUF_O_4" P7;
+//IO_LOC "ula_1.addr_IBUF_O_3" P8;
+//IO_LOC "ula_1.addr_IBUF_O_2" P9;
+//IO_LOC "ula_1.addr_IBUF_O_1" R7;
+//IO_LOC "ula_1.addr_IBUF_O" R9;   // This is index 0 :)
 //
-//IO_LOC "ula_1.db_IBUF_O_0" K15;
 //IO_LOC "ula_1.addr_IBUF_O_0" R8;
 //IO_LOC "" L16;
 //IO_LOC "" L9;

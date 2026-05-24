@@ -42,10 +42,11 @@ port (
 	R          :   out std_logic;                    
 	G          :   out std_logic;                    
 	B          :   out std_logic;                    
-	SYNC       :   out std_logic;                    
+	SYNC       :   out std_logic
+        --;                    
 
-        DBTOP         :   in  std_logic_vector( 7 downto 0);
-	ADDRHI     :   in  std_logic_vector(15 downto 8)
+--        DBTOP         :   in  std_logic_vector( 7 downto 0);
+--	ADDRHI     :   in  std_logic_vector(15 downto 8)
 );
 end;
 
@@ -67,12 +68,12 @@ begin
 	R => R,
 	G => G,
 	B => B,
-	SYNC => SYNC,
+	SYNC => SYNC
+        --,
         
-        ADDR(15 downto 8) => ADDRHI,
-        ADDR(7 downto 0) => (others => '0'),
-        DB => DBTOP
+--        ADDR(15 downto 8) => ADDRHI,
+--        ADDR(7 downto 0) => (others => '0'),
+--        DB => DBTOP
         
     );
-  
 end architecture RTL;

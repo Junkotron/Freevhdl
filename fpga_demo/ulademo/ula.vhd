@@ -88,8 +88,8 @@ port (
 	PHI2_EN    :   out std_logic;                     -- 1 MHz clock enable pulse
 	RW         :   in  std_logic;                     -- R/W from CPU                 -- pin 27
 	MAPn       :   in  std_logic;                     -- MAP                          -- pin 26
-	DB         :   in  std_logic_vector( 7 downto 0); -- DATA BUS                     -- pin 18,34,5,13,12,11,17,8
-	ADDR       :   in  std_logic_vector(15 downto 0); -- ADDRESS BUS                  -- pin 30,29,22,35,15,31,33,32, A7,A6,A5,A4,A3,A2,A1,A0
+--	DB         :   in  std_logic_vector( 7 downto 0); -- DATA BUS                     -- pin 18,34,5,13,12,11,17,8
+--	ADDR       :   in  std_logic_vector(15 downto 0); -- ADDRESS BUS                  -- pin 30,29,22,35,15,31,33,32, A7,A6,A5,A4,A3,A2,A1,A0
 	-- SRAM
 	CSRAMn     :   out std_logic;
 	SRAM_AD    :   out std_logic_vector(15 downto 0);
@@ -128,6 +128,9 @@ end;
 
 architecture RTL of ula is
 
+  signal DB         :    std_logic_vector( 7 downto 0);
+  signal ADDR       :    std_logic_vector(15 downto 0); 
+  
 	-- Signal CLOCK
 	signal CLK_24        : std_logic;                    -- CLOCK 24 MHz internal
 	signal CLK_4_INT     : std_logic;                    -- CLOCK  4 MHz internal
