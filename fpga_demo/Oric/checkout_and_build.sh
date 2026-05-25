@@ -12,7 +12,6 @@ FILE_LIST="microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop.vhd oric
 
 #(very) small patch to make work..
 cat Oric_MiSTer/rtl/oricatmos.vhd | sed 's/inst_microdisc : work.Microdisc/inst_microdisc : entity work.Microdisc/g' > tmp_vhd.txt
-
 cp tmp_vhd.txt Oric_MiSTer/rtl/oricatmos.vhd
 
 for i in $FILE_LIST; do

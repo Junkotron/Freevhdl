@@ -44,14 +44,14 @@ read
 nextpnr-ice40 --hx8k --json oricatmos_ice40.json --pcf oricatmos.pcf --asc oricatmos.asc --package ct256 --pcf-allow-unconstrained
 
 
-icepack oricatmos.asc oricatmos.bin
+#icepack oricatmos.asc oricatmos.bin
 
 
 
 echo "now enter to synth gowin"
 read
 
-yosys -m ghdl -p "ghdl $FLAGS oricatmos; synth_gowin -json oricatmos_gowin.json"
+yosys -m ghdl -p "ghdl $FLAGS oricatmostop; synth_gowin -json oricatmos_gowin.json"
 
 
 echo "*** PNR ***"
