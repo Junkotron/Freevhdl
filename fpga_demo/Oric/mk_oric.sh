@@ -26,12 +26,27 @@ for i in $DISKS; do
     ghdl -a $FLAGS rom/$i
 done
 
-ORIC="m6522.vhd ula.vhd video.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd"
+ORIC="m6522.vhd ula.vhd video.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop.vhd"
 
 
 for i in $ORIC; do
     ghdl -a -fexplicit -fsynopsys $FLAGS $i
 done
+
+echo "now enter to synth ice40"
+read
+
+yosys -m ghdl -p "ghdl $FLAGS oricatmostop; synth_ice40 -json oricatmos_ice40.json"
+
+echo "Enter to pnr ice40" 
+read
+
+nextpnr-ice40 --hx8k --json oricatmos_ice40.json --pcf oricatmos.pcf --asc oricatmos.asc --package ct256 --pcf-allow-unconstrained
+
+
+icepack oricatmos.asc oricatmos.bin
+
+
 
 echo "now enter to synth gowin"
 read

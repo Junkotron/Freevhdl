@@ -1,0 +1,62 @@
+
+
+
+IO_LOC "via_t2l_l_out_OBUF_O_7" A11;
+IO_LOC "via_t2l_l_out_OBUF_O_6" A13;
+IO_LOC "via_t2l_l_out_OBUF_O_5" A14;
+IO_LOC "via_t2l_l_out_OBUF_O_4" A15;
+IO_LOC "via_t2l_l_out_OBUF_O_3" B11;
+IO_LOC "via_t2l_l_out_OBUF_O_2" B12;
+IO_LOC "via_t2l_l_out_OBUF_O_1" B13;
+IO_LOC "via_t2l_l_out_OBUF_O" B14;
+
+IO_LOC "via_t2l_h_out_OBUF_O_7" G16;
+IO_LOC "via_t2l_h_out_OBUF_O_6" H11;
+IO_LOC "via_t2l_h_out_OBUF_O_5" H14;
+IO_LOC "via_t2l_h_out_OBUF_O_4" H15;
+IO_LOC "via_t2l_h_out_OBUF_O_3" H16;
+IO_LOC "via_t2l_h_out_OBUF_O_2" D10;
+IO_LOC "via_t2l_h_out_OBUF_O_1" C12;
+IO_LOC "via_t2l_h_out_OBUF_O" C13;
+
+
+//free...
+
+
+IO_LOC "ula_1.db_IBUF_O_5" D11;
+IO_LOC "ula_1.db_IBUF_O_4" D14;
+IO_LOC "ula_1.db_IBUF_O_3" E15;
+IO_LOC "ula_1.db_IBUF_O_2" J15;
+IO_LOC "ula_1.db_IBUF_O_1" K14;
+IO_LOC "ula_1.db_IBUF_O_0" K15;
+IO_LOC "ula_1.db_IBUF_O" K16;
+IO_LOC "ula_1.addr_IBUF_O_7" L14;
+IO_LOC "ula_1.addr_IBUF_O_6" N9;
+IO_LOC "ula_1.addr_IBUF_O_5" P6;
+IO_LOC "ula_1.addr_IBUF_O_4" P7;
+IO_LOC "ula_1.addr_IBUF_O_3" P8;
+IO_LOC "ula_1.addr_IBUF_O_2" P9;
+IO_LOC "ula_1.addr_IBUF_O_1" R7;
+IO_LOC "ula_1.addr_IBUF_O_0" R8;
+IO_LOC "ula_1.addr_IBUF_O" R9;
+
+
+
+// Free...
+
+//
+//IO_LOC "ula_1.addr_IBUF_O_8" L16;
+//IO_LOC "ula_1.addr_IBUF_O_9" L9;
+//IO_LOC "ula_1.addr_IBUF_O_10" N14;
+//IO_LOC "ula_1.addr_IBUF_O_11" N16;
+//IO_LOC "ula_1.addr_IBUF_O_12" N6;
+//IO_LOC "ula_1.addr_IBUF_O_13" N7;
+//IO_LOC "ula_1.addr_IBUF_O_14" N8;
+//IO_LOC "ula_1.addr_IBUF_O_15" N9;
+//
+//IO_LOC "" T10;
+//IO_LOC "" T10;
+//IO_LOC "" T3;
+//IO_LOC "" T6;
+//IO_LOC "" T7;
+//IO_LOC "" T8;
