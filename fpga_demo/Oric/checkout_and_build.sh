@@ -1,8 +1,14 @@
 #!/bin/bash
 
-git clone https://github.com/nikiiv/Oric_MiSTer.git
+if [ -e Oric_MiSTer ]; then
+   echo "Oric already checked out.."
+else
+    echo "Checking out Oric.."
+    git clone https://github.com/nikiiv/Oric_MiSTer.git
+fi
+    
 
-FILE_LIST="apple2_disk/dpram_dummy.vhd oricatmostop.vhd oricatmos.pcf oricatmos.cst mk_oric.sh"
+FILE_LIST="microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop.vhd oricatmos.pcf oricatmos.cst mk_oric.sh"
 
 #(very) small patch to make work..
 cat Oric_MiSTer/rtl/oricatmos.vhd | sed 's/inst_microdisc : work.Microdisc/inst_microdisc : entity work.Microdisc/g' > tmp_vhd.txt
