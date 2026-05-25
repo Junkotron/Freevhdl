@@ -1,10 +1,10 @@
 #!/bin/bash
 
 
-SRC=vector
-TOP=myvector
+SRC=vectop
+TOP=myvectop
 
-yosys -D LEDS_NR=8 -D INV_BTN=0 -p "read_verilog $SRC.v; synth_gowin -top $TOP -json from_verilog_$SRC.json -family gw2a"
+yosys -D LEDS_NR=8 -D INV_BTN=0 -p "read_verilog vector.v $SRC.v; synth_gowin -top $TOP -json from_verilog_$SRC.json -family gw2a"
 
 
 DEVICE="GW2A-LV18PG256C7/I6"

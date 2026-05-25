@@ -1,8 +1,9 @@
 #!/bin/bash
 
-SRC=vector
-TOP=myvector
+SRC=vectop
+TOP=myvectop
 
+ghdl -a -fexplicit -fsynopsys vector.vhd
 ghdl -a -fexplicit -fsynopsys $SRC.vhd
 
 yosys -m ghdl -p "ghdl -fexplicit -fsynopsys $TOP; synth_gowin -json from_vhdl_$SRC.json"

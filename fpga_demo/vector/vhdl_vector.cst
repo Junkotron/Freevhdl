@@ -6,13 +6,26 @@ IO_LOC  "vec_IBUF_I_2" A13;
 IO_PORT "vec_IBUF_I_2" IO_TYPE=LVCMOS33;
 IO_LOC  "vec_IBUF_I_1" T10;
 IO_PORT "vec_IBUF_I_1" IO_TYPE=LVCMOS33;
-//IO_LOC  "vec_IBUF_I_0" A11;
-//IO_PORT "vec_IBUF_I_0" IO_TYPE=LVCMOS33;
-
-// This is weird...
 IO_LOC  "vec_IBUF_I" A14;
 IO_PORT "vec_IBUF_I" IO_TYPE=LVCMOS33;
 
 IO_LOC  "y" C13;
 IO_PORT "y" IO_TYPE=LVCMOS33;
 
+IO_LOC  "ein" D14;
+IO_PORT "ein" IO_TYPE=LVCMOS33;
+IO_LOC  "eout" E15;
+IO_PORT "eout" IO_TYPE=LVCMOS33;
+
+
+// free
+
+//IO_LOC "ula_1.db_IBUF_O_2" J15;
+//IO_LOC "ula_1.db_IBUF_O_1" K14;
+//IO_LOC "ula_1.db_IBUF_O" K16;   // This is index 0 :)
+
+//IO_LOC "ula_1.addr_IBUF_O_7" L14;
+//IO_LOC "ula_1.addr_IBUF_O_6" N9;
+//IO_LOC "ula_1.addr_IBUF_O_5" P6;
+//IO_LOC "ula_1.addr_IBUF_O_4" P7;
+//IO_LOC "ula_1.addr_IBUF_O_3" P8;
