@@ -33,10 +33,27 @@ for i in $ORIC; do
     ghdl -a -fexplicit -fsynopsys $FLAGS $i
 done
 
+
+do_yosys() {
+
+    PLATTFORM=$1
+    
+    yosys -p "read_verilog keyboard.sv; write_rtlil keyboard_$PLATTFORM.rtlil"
+
+    yosys -m ghdl -p "ghdl $FLAGS oricatmostop; write_rtlil oricatmos_$PLATTFORM.rtlil"
+
+
+    yosys -p "read_rtlil oricatmos_ice40.rtlil keyboard_$PLATTFORM.rtlil; synth_$PLATTFORM -json oricatmos_$PLATTFORM.json"
+
+#    yosys -p "read_rtlil oricatmos_ice40.rtlil; synth_ice40 -json oricatmos_$PLATTFORM_nokbd.json"
+
+    
+    }
+
 echo "now enter to synth ice40"
 read
 
-yosys -m ghdl -p "ghdl $FLAGS oricatmostop; synth_ice40 -json oricatmos_ice40.json"
+do_yosys ice40
 
 echo "Enter to pnr ice40" 
 read
@@ -51,7 +68,7 @@ nextpnr-ice40 --hx8k --json oricatmos_ice40.json --pcf oricatmos.pcf --asc orica
 echo "now enter to synth gowin"
 read
 
-yosys -m ghdl -p "ghdl $FLAGS oricatmostop; synth_gowin -json oricatmos_gowin.json"
+do_yosys gowin
 
 
 echo "*** PNR ***"
