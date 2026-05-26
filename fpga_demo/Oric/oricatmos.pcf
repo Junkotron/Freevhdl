@@ -1,0 +1,60 @@
+
+set_io tape_byte_enable B2
+set_io phi2 C2
+set_io RESET D1
+set_io pravetz_layout D2
+set_io key_strobe E2
+set_io key_pressed E3
+set_io key_extended E4
+set_io key_code[7] F1
+set_io key_code[6] F2
+set_io key_code[5] F3
+set_io key_code[4] F4
+set_io key_code[3] F5
+set_io key_code[2] G3
+set_io key_code[1] G4
+set_io key_code[0] G5
+set_io K7_TAPEIN H2
+set_io K7_TAPEOUT H3
+set_io K7_REMOTE H4
+set_io VIDEO_CLK H5
+set_io VIDEO_R H6
+set_io VIDEO_G J3
+set_io VIDEO_B J5
+set_io VIDEO_HBLANK K9
+set_io VIDEO_VBLANK K11
+set_io VIDEO_HSYNC L9
+set_io VIDEO_VSYNC M7
+set_io VIDEO_SYNC M8
+set_io CLK_IN M9
+set_io pll_locked N5
+
+
+### Free below ###
+
+#M12
+#N6
+#N7
+#N9
+#P4
+#P5
+#P6
+#P7
+#P8
+#P9
+#P13
+#R2
+#R3
+#R4
+#R5
+#R6
+#R9
+#R16
+#T1
+#T2
+#T3
+#T5
+#T6
+#T7
+#T8
+#T9

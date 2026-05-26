@@ -1,0 +1,21 @@
+
+
+This is intended for streamlining, currently towards and fresh install of Ubuntu 25.10
+You also need to create the "pi" account
+
+It does currently put staging stuff into /home
+
+To run the install:
+
+> sudo ./0_install.sh
+(This will put the necessary files onto the staging area)
+
+
+> /home/1_install.sh
+(This will do all the rest but you need to enter sudo password at times)
+
+
+After this (about 1 hr YMMV) you will get an fpga_demo directory in pi
+user account.
+
+

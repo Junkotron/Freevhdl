@@ -1,0 +1,26 @@
+
+
+The demos and their purpose
+
+nand/
+The "walking skeleton" test, a simple nand-gate implemented in vhdl & verilog
+
+vector/
+A little more challenging using a vector in synthing also we strip
+ports into a top module in two languages
+
+cross/
+An example of how vhdl and verilog is combined in the same project
+via the .rtlil format of yosys
+
+
+ulademo/
+Take one .vhd file from the "Oric_MiSTer" project and make it synth
+and pnr in yosys after some modifications.
+It will make target examples both for the ICE40 and Gowin platforms
+
+Oric/
+An attempt to synth the full "Oric_MiSTer" project, the checkout_and_build.sh
+will take the Oric files from another repo so it might not work in the future
+
+
