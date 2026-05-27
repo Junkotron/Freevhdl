@@ -32,6 +32,16 @@ else
     cd
 fi
 
+# Fix for appimages, salae logic probe in mind..
+sudo add-apt-repository -y universe
+sudo apt -y install libfuse2t64
+
+https://logic2api.saleae.com/download?os=linux&arch=x64
+
+chmod a+rx Download/Logic-2.4.44-linux-x64.AppImage
+
+
+
 /home/fpga_packages.sh
 /home/fpga_build_pnr.sh
 /home/fpga_build_yosys.sh

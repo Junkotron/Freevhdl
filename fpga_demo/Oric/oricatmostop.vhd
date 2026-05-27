@@ -38,13 +38,17 @@
 --
 --
 
+--  TODO back this without clk4 divider and
+--  fork to ice40 and gowik resp.
+
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.all;
 ENTITY oricatmostop IS
 	PORT (
+                test_pin : out std_logic; -- to scope 
 		CLK_IN : IN STD_LOGIC;
-		RESET : IN STD_LOGIC;
+		RESET_BUT1 : IN STD_LOGIC;
 		key_pressed : IN STD_LOGIC;
 		key_extended : IN STD_LOGIC;
 		key_code : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -118,18 +122,40 @@ ENTITY oricatmostop IS
 END;
 
 ARCHITECTURE RTL OF oricatmostop IS
-signal		s_tape_byte_enable : STD_LOGIC;
 
-signal  s_via_snap_t2c_data    : STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal RESET : std_logic;
+  
+signal s_tape_byte_enable : STD_LOGIC;
+
+signal s_via_snap_t2c_data    : STD_LOGIC_VECTOR(15 DOWNTO 0);
+
+signal CLK_25MHZ : STD_LOGIC;
 
 BEGIN
+
+--  test_pin <= RESET_BUT1;
+  
+  RESET <= not RESET_BUT1;
   
   s_tape_byte_enable <= '0';
   s_via_snap_t2c_data <= (others => '0');
+
+  divn_clk: entity work.clock_divider_n(Behavioral)
+    generic map (
+      N => 4
+    )
+    port map (
+      clk_in => CLK_IN,
+      reset => '0',
+      clk_out => CLK_25MHZ
+    );
+
+  -- CLK_25MHZ <= CLK_IN;
   
   oric : entity work.oricatmos(RTL)
     port map (
-		CLK_IN => CLK_IN,
+                test_pin => test_pin,
+		CLK_IN => CLK_25MHZ,
 		RESET => RESET,
 		key_pressed => key_pressed,
 		key_extended => key_extended,

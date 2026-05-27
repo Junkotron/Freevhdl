@@ -8,7 +8,7 @@ else
 fi
     
 
-FILE_LIST="microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop.vhd oricatmos.pcf oricatmos.cst mk_oric.sh"
+FILE_LIST="microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop.vhd oricatmos.pcf oricatmos.cst mk_oric.sh divn.vhd ula.vhd oricatmos.vhd"
 
 #(very) small patch to make work..
 cat Oric_MiSTer/rtl/oricatmos.vhd | sed 's/inst_microdisc : work.Microdisc/inst_microdisc : entity work.Microdisc/g' > tmp_vhd.txt

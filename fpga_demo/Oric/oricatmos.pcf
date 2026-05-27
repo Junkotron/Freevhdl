@@ -1,38 +1,44 @@
 
-set_io tape_byte_enable B2
+set_io test_pin F2 # This is currently the yellow cable to the
+                   # serial port on the "ruska" we abuse
+
+set_io CLK_IN J3
+set_io tape_byte_enable J5
 set_io phi2 C2
-set_io RESET D1
+
+# button low when pressed
+set_io RESET_BUT1 K11
+
 set_io pravetz_layout D2
 set_io key_strobe E2
 set_io key_pressed E3
-set_io key_extended E4
+set_io key_extended H6
 set_io key_code[7] F1
-set_io key_code[6] F2
+set_io key_code[6] M12
 set_io key_code[5] F3
 set_io key_code[4] F4
-set_io key_code[3] F5
+set_io key_code[3] L9
 set_io key_code[2] G3
 set_io key_code[1] G4
 set_io key_code[0] G5
 set_io K7_TAPEIN H2
-set_io K7_TAPEOUT H3
+set_io K7_TAPEOUT M7
 set_io K7_REMOTE H4
 set_io VIDEO_CLK H5
-set_io VIDEO_R H6
-set_io VIDEO_G J3
-set_io VIDEO_B J5
+set_io VIDEO_R E4
+set_io VIDEO_G B2
+set_io VIDEO_B F5
 set_io VIDEO_HBLANK K9
-set_io VIDEO_VBLANK K11
-set_io VIDEO_HSYNC L9
-set_io VIDEO_VSYNC M7
+set_io VIDEO_VBLANK D1
+set_io VIDEO_HSYNC H1
+set_io VIDEO_VSYNC G1
 set_io VIDEO_SYNC M8
-set_io CLK_IN M9
 set_io pll_locked N5
 
 
 ### Free below ###
 
-#M12
+
 #N6
 #N7
 #N9

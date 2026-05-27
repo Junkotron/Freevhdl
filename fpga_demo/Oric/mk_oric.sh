@@ -26,7 +26,7 @@ for i in $DISKS; do
     ghdl -a $FLAGS rom/$i
 done
 
-ORIC="m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop.vhd"
+ORIC="divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop.vhd"
 
 
 for i in $ORIC; do
@@ -58,7 +58,7 @@ read
 nextpnr-ice40 --hx8k --json oricatmos_ice40.json --pcf oricatmos.pcf --asc oricatmos.asc --package ct256 --pcf-allow-unconstrained
 
 
-#icepack oricatmos.asc oricatmos.bin
+icepack oricatmos.asc oricatmos.bin
 
 
 
