@@ -122,7 +122,7 @@ ENTITY oricatmostop IS
 END;
 
 ARCHITECTURE RTL OF oricatmostop IS
-
+  
 signal RESET : std_logic;
   
 signal s_tape_byte_enable : STD_LOGIC;
@@ -133,7 +133,7 @@ signal CLK_25MHZ : STD_LOGIC;
 
 BEGIN
 
---  test_pin <= RESET_BUT1;
+  test_pin <= VIDEO_VSYNC;
   
   RESET <= not RESET_BUT1;
   
@@ -154,7 +154,6 @@ BEGIN
   
   oric : entity work.oricatmos(RTL)
     port map (
-                test_pin => test_pin,
 		CLK_IN => CLK_25MHZ,
 		RESET => RESET,
 		key_pressed => key_pressed,

@@ -79,7 +79,6 @@ library ieee;
 
 entity ula is
 port (
-        test_pin   :   out std_logic;
 	RESETn     :   in  std_logic;                     -- RESET master
 	CLK_4      :   out std_logic;                     -- 4 MHz internal
 	CLK_4_EN   :   out std_logic;                     -- 4 MHz internal clock enable pulse
@@ -214,8 +213,6 @@ architecture RTL of ula is
 
 begin
 
-        test_pin <= RESETn;
-  
 	-- input assignments
 	lADDR        <= ADDR;
 	DB_INT       <= DB;

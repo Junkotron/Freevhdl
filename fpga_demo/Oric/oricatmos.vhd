@@ -43,7 +43,6 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.all;
 ENTITY oricatmos IS
 	PORT (
-                test_pin : out std_logic;
                 CLK_IN : IN STD_LOGIC;
 		RESET : IN STD_LOGIC;
 		key_pressed : IN STD_LOGIC;
@@ -159,8 +158,6 @@ END;
 
 ARCHITECTURE RTL OF oricatmos IS
 
-        signal test_ula : std_logic;
-  
 	-- Gestion des resets
 	SIGNAL RESETn : STD_LOGIC;
 	SIGNAL reset_dll_h : STD_LOGIC;
@@ -458,26 +455,8 @@ BEGIN
 			data => ROM_MD_DO
 		);
 
-        -- this should be 4 MHz from ula...a
-
---         inst_div1000 : entity work.clock_divider_n(Behavioral)
---           generic map (
---             N => 1000
---             )
---           port map (
--- --            clk_in => ula_CLK_4,
---             clk_in => test_ula,
---             reset => '0',
---             clk_out => test_pin
---             );
-
-        test_pin <= test_ula;
-
---        test_pin <= RESETn;
-        
         inst_ula : ENTITY work.ULA
 		PORT MAP(
-                        test_pin => test_ula,
 			CLK => CLK_IN,
 			PHI2 => ula_phi2,
 			PHI2_EN => ENA_1MHZ,
