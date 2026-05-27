@@ -1,0 +1,36 @@
+
+// DONT USE THIS IN THE REAL WORLD IT WILL EXPLODE!!!
+
+// TODO: proper pin assignment needed!!!
+
+IO_LOC "CLK100MHz" A11;
+IO_LOC "vga_r[0]" A13;
+IO_LOC "vga_r[1]" G16;
+IO_LOC "vga_r[2]" H11;
+IO_LOC "vga_g[0]" A14;
+IO_LOC "vga_g[1]" H15;
+IO_LOC "vga_g[2]" H16;
+IO_LOC "vga_b[0]" A15;
+IO_LOC "vga_b[1]" C12;
+IO_LOC "vga_b[2]" C13;
+
+IO_LOC "vga_hs" B11;
+IO_LOC "vga_vs" B12;
+IO_LOC "ps2_clk" B13;
+IO_LOC "ps2_data" B14;
+
+
+// free...
+
+//IO_LOC "" D14;
+//IO_LOC "" E15;
+//IO_LOC "" J15;
+//IO_LOC "" K14;
+//IO_LOC "" K15;
+//IO_LOC "" K16;
+//IO_LOC "" L14;
+//IO_LOC "" N9;
+//IO_LOC "" P6;
+//IO_LOC "" P7;
+//IO_LOC "CLK_IN" P9;
+

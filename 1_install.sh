@@ -35,6 +35,7 @@ fi
 /home/fpga_packages.sh
 /home/fpga_build_pnr.sh
 /home/fpga_build_yosys.sh
+/home/fpga_build_iceprogduino.sh
 
 
 cd

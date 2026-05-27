@@ -1,0 +1,20 @@
+
+We only use the r[2] g[2] and b[2] wires and uise 270 ohms resistors:
+
+Demo prog always sets all three bits to one or zero anyways
+
+The original with 470, 1k and 1.8k in parallel will become about
+270 ohm
+1/(1/470 + 1/1000 + 1/1800) ~= 271 ohms
+
+We have not tested this with the PS2 keyboard!
+
+Name     FPGA BGA-256   Schematic name  FPGA 34-pin extender
+
+r[2]     E4             PIO3_00          5 (via 270 R)
+g[2]     B2             PIO3_01          7 (via 270 R)
+b[2]     F5             PIO3_02          9 (via 270 R)
+
+
+hs       H1             PIO3_27         12
+vs       G1             PIO3_25         14

@@ -26,3 +26,6 @@ cd nextpnr/build_ice40
 sudo make install
 cd
 
+cd iCE40HX1K-EVB/programmer/iceprogduino
+sudo make install
+cd

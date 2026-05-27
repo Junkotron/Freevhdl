@@ -26,7 +26,7 @@ for i in $DISKS; do
     ghdl -a $FLAGS rom/$i
 done
 
-ORIC="m6522.vhd ula.vhd video.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop.vhd"
+ORIC="m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop.vhd"
 
 
 for i in $ORIC; do
@@ -42,10 +42,7 @@ do_yosys() {
 
     yosys -m ghdl -p "ghdl $FLAGS oricatmostop; write_rtlil oricatmos_$PLATTFORM.rtlil"
 
-
-    yosys -p "read_rtlil oricatmos_ice40.rtlil keyboard_$PLATTFORM.rtlil; synth_$PLATTFORM -json oricatmos_$PLATTFORM.json"
-
-#    yosys -p "read_rtlil oricatmos_ice40.rtlil; synth_ice40 -json oricatmos_$PLATTFORM_nokbd.json"
+    yosys -p "read_rtlil oricatmos_$PLATTFORM.rtlil keyboard_$PLATTFORM.rtlil; synth_$PLATTFORM -json oricatmos_$PLATTFORM.json"
 
     
     }
