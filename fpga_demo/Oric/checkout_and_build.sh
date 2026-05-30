@@ -8,7 +8,7 @@ else
 fi
     
 
-FILE_LIST="microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop.vhd oricatmos.pcf oricatmos.cst mk_oric.sh divn.vhd ula.vhd oricatmos.vhd"
+FILE_LIST="microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd oricatmos.pcf oricatmos.cst mk_oric.sh divn.vhd ula.vhd oricatmos.vhd tristate.v"
 
 #(very) small patch to make work..
 cat Oric_MiSTer/rtl/oricatmos.vhd | sed 's/inst_microdisc : work.Microdisc/inst_microdisc : entity work.Microdisc/g' > tmp_vhd.txt
@@ -24,6 +24,7 @@ chmod a+rx Oric_MiSTer/rtl/mk_oric.sh
 
 cd Oric_MiSTer/rtl
 
-./mk_oric.sh
+./mk_oric.sh ice40 all
+./mk_oric.sh gowin all
 
 

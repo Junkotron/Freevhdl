@@ -29,3 +29,8 @@ cd
 cd iCE40HX1K-EVB/programmer/iceprogduino
 sudo make install
 cd
+
+cd openFPGALoader/build
+sudo make install
+cd
+

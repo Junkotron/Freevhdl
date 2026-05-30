@@ -46,6 +46,7 @@ chmod a+rx Download/Logic-2.4.44-linux-x64.AppImage
 /home/fpga_build_pnr.sh
 /home/fpga_build_yosys.sh
 /home/fpga_build_iceprogduino.sh
+/home/fpga_build_openfpgaloader.sh
 
 
 cd

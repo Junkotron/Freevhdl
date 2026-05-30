@@ -9,58 +9,67 @@ set_io phi2 C2
 # button low when pressed
 set_io RESET_BUT1 K11
 
-set_io pravetz_layout D2
+set_io ram_cs T6
+set_io ram_oe L9
+set_io ram_we T7
+
+
+set_io a[0] N6
+set_io a[1] T1
+set_io a[2] P4
+set_io a[3] R2
+set_io a[4] N5
+set_io a[5] T2
+set_io a[6] P5
+set_io a[7] R3
+set_io a[8] R5
+set_io a[9] T3
+set_io a[10] R4
+set_io a[11] M7
+set_io a[12] N7
+set_io a[13] P6
+set_io a[14] M8
+set_io a[15] T5
+set_io a[16] R6
+set_io a[17] P8
+
+set_io d[0] T8
+set_io d[1] P7
+set_io d[2] N9
+set_io d[3] T9
+set_io d[4] M9
+set_io d[5] R9
+set_io d[6] K9
+set_io d[7] P9
+
+
+
+set_io pravetz_layout F3
 set_io key_strobe E2
 set_io key_pressed E3
 set_io key_extended H6
 set_io key_code[7] F1
 set_io key_code[6] M12
-set_io key_code[5] F3
+set_io key_code[5] D2
 set_io key_code[4] F4
-set_io key_code[3] L9
+set_io key_code[3] P13
 set_io key_code[2] G3
 set_io key_code[1] G4
 set_io key_code[0] G5
 set_io K7_TAPEIN H2
-set_io K7_TAPEOUT M7
+set_io K7_TAPEOUT R16
 set_io K7_REMOTE H4
 set_io VIDEO_CLK H5
 set_io VIDEO_R E4
 set_io VIDEO_G B2
 set_io VIDEO_B F5
-set_io VIDEO_HBLANK K9
-set_io VIDEO_VBLANK D1
 set_io VIDEO_HSYNC H1
 set_io VIDEO_VSYNC G1
-set_io VIDEO_SYNC M8
-set_io pll_locked N5
+set_io VIDEO_SYNC H3
+set_io pll_locked D1
 
 
 ### Free below ###
 
 
-#N6
-#N7
-#N9
-#P4
-#P5
-#P6
-#P7
-#P8
-#P9
-#P13
-#R2
-#R3
-#R4
-#R5
-#R6
-#R9
-#R16
-#T1
-#T2
-#T3
-#T5
-#T6
-#T7
-#T8
-#T9
+
