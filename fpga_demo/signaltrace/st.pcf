@@ -1,0 +1,10 @@
+
+
+set_io clk_1kHz F2 # Connect this pin to scope, logic probe or smth
+       		   # should give out "the_internal" signal from divn
+
+
+set_io clk_in J3
+
+set_io u_clk_divider.logprobe_bit F3
+

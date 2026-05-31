@@ -1,0 +1,8 @@
+read_verilog -sv st.v
+read_verilog -sv divn.v
+hierarchy -top sttop
+flatten
+proc
+expose sttop/u_clk_divider.logprobe_bit
+write_verilog result_noedit.v
+

@@ -36,6 +36,10 @@ for i in $ORIC; do
     ghdl -a -fexplicit -fsynopsys $FLAGS $i
 done
 
+if [ $MODE == "ghdl" ]; then
+    exit 0
+fi
+
 
 do_yosys() {
 
@@ -46,9 +50,18 @@ do_yosys() {
 	yosys -p "read_verilog tristate.v; write_rtlil tristate_$PLATTFORM.rtlil"
     fi
 
-    yosys -m ghdl -p "ghdl $FLAGS oricatmostop_$PLATTFORM; write_rtlil oricatmostop_$PLATTFORM.rtlil"
+    yosys -m ghdl -p "ghdl $FLAGS oricatmostop_$PLATTFORM; flatten; write_rtlil oricatmostop_$PLATTFORM.rtlil"
 
-    VLOG_COMMON="oricatmostop_$PLATTFORM.rtlil keyboard_$PLATTFORM.rtlil"
+    echo "tcl..."
+    read
+    
+    cat yo.tcl | yosys
+
+    echo "tcl done"
+    read
+    
+#    VLOG_COMMON="oricatmostop_$PLATTFORM.rtlil keyboard_$PLATTFORM.rtlil"
+    VLOG_COMMON="modified_$PLATTFORM.rtlil keyboard_$PLATTFORM.rtlil"
     if [ $PLATTFORM == "ice40" ]; then
 	VLOG_PLATTFORM="tristate_ice40.rtlil"
     fi

@@ -9,7 +9,7 @@ pushd Oric_MiSTer/rtl
 
 mkdir -p old 
 
-mv mk_oric.sh *.rtlil *.json *~ *.bin *.asc pack.fs old/
+mv mk_oric.sh *.rtlil *.json *~ *.bin *.asc *.fs old/
 
 popd
 

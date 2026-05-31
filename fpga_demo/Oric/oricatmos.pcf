@@ -9,7 +9,9 @@ set_io phi2 C2
 # button low when pressed
 set_io RESET_BUT1 K11
 
-set_io ram_cs T6
+# TODO Get rid of this!!!
+#set_io ram_cs T6
+set_io oric.ula_phi2 T6
 set_io ram_oe L9
 set_io ram_we T7
 
