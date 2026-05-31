@@ -50,17 +50,25 @@ do_yosys() {
 	yosys -p "read_verilog tristate.v; write_rtlil tristate_$PLATTFORM.rtlil"
     fi
 
-    yosys -m ghdl -p "ghdl $FLAGS oricatmostop_$PLATTFORM; flatten; write_rtlil oricatmostop_$PLATTFORM.rtlil"
+    yosys -m ghdl -p "ghdl $FLAGS oricatmostop_$PLATTFORM; write_rtlil oricatmostop_$PLATTFORM.rtlil"
 
-    echo "tcl..."
-    read
+    # This is kind of useful to check that our desired signal is in the
+    # portlist
     
-    cat yo.tcl | yosys
+#    echo "tcl..."
+#    read
 
-    echo "tcl done"
-    read
+    # Skip for now for gowin pin names does not work :(%
     
-#    VLOG_COMMON="oricatmostop_$PLATTFORM.rtlil keyboard_$PLATTFORM.rtlil"
+    if [ $PLATTFORM == "ice40" ]; then
+	yosys < yo_$PLATTFORM.txt
+    else
+	cp oricatmostop_$PLATTFORM.rtlil modified_$PLATTFORM.rtlil
+    fi
+
+#    echo "tcl done"
+#    read
+    
     VLOG_COMMON="modified_$PLATTFORM.rtlil keyboard_$PLATTFORM.rtlil"
     if [ $PLATTFORM == "ice40" ]; then
 	VLOG_PLATTFORM="tristate_ice40.rtlil"

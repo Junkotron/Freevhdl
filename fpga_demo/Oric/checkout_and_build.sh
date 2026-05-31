@@ -6,13 +6,20 @@ else
     echo "Checking out Oric.."
     git clone https://github.com/nikiiv/Oric_MiSTer.git
 fi
-    
 
-FILE_LIST="microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd oricatmos.pcf oricatmos.cst mk_oric.sh divn.vhd ula.vhd oricatmos.vhd tristate.v yo.tcl"
+VHDL_FILE_LIST="microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd divn.vhd oricatmos.vhd"
+
+MISC_FILE_LIST="oricatmos.pcf oricatmos.cst mk_oric.sh divn.vhd tristate.v yo_gowin.txt yo_ice40.txt"
+
+FILE_LIST="$MISC_FILE_LIST $VHDL_FILE_LIST"
 
 #(very) small patch to make work..
 cat Oric_MiSTer/rtl/oricatmos.vhd | sed 's/inst_microdisc : work.Microdisc/inst_microdisc : entity work.Microdisc/g' > tmp_vhd.txt
 cp tmp_vhd.txt Oric_MiSTer/rtl/oricatmos.vhd
+
+pushd Oric_MiSTer/rtl
+chmod u+w $FILE_LIST
+popd
 
 for i in $FILE_LIST; do
     cp $i Oric_MiSTer/rtl/$i
@@ -22,9 +29,19 @@ rm -f tmp_vhd.txt
 
 chmod a+rx Oric_MiSTer/rtl/mk_oric.sh
 
+# Write protect in build dir
+pushd Oric_MiSTer/rtl
+chmod a-w $FILE_LIST
+popd
+
+
 cd Oric_MiSTer/rtl
 
 ./mk_oric.sh ice40 all
-#./mk_oric.sh gowin all
+
+echo "Enter (for now) to build gowin"
+read
+
+./mk_oric.sh gowin all
 
 

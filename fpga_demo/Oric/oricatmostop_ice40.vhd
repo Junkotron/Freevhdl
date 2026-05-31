@@ -46,8 +46,8 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.all;
 ENTITY oricatmostop_ice40 IS
 	PORT (
-                test_pin : out std_logic; -- to scope 
-		CLK_IN : IN STD_LOGIC;
+          CLK_TEST : out STD_LOGIC;
+		CLK_EXT : IN STD_LOGIC;
 		RESET_BUT1 : IN STD_LOGIC;
 		key_pressed : IN STD_LOGIC;
 		key_extended : IN STD_LOGIC;
@@ -114,9 +114,8 @@ end COMPONENT;
     
 
 BEGIN
+  CLK_TEST <= CLK_EXT;
 
-  test_pin <= VIDEO_VSYNC;
-  
   RESET <= not RESET_BUT1;
   
   s_tape_byte_enable <= '0';
@@ -124,10 +123,10 @@ BEGIN
 
   inst_tribuf : tristate
     port MAP(
-      clk => CLK_IN,
+      clk => CLK_25MHz,
       dir => ram_oe,
-      o => ram_d,
-      i => ram_q,
+      o => ram_q,
+      i => ram_d,
       buff => ram_dq
       );
   
@@ -136,13 +135,11 @@ BEGIN
       N => 4
     )
     port map (
-      clk_in => CLK_IN,
+      clk_in => CLK_EXT,
       reset => '0',
       clk_out => CLK_25MHZ
     );
 
-  -- CLK_25MHZ <= CLK_IN;
-  
   oric : entity work.oricatmos(RTL)
     port map (
 		CLK_IN => CLK_25MHZ,
@@ -223,7 +220,14 @@ BEGIN
 		ay_snap_creg    => (others => '0'),
 		ula_snap_mode   => (others => '0'),
 		patch_data      => (others => '0'),
-                ram_q => (others => '0')
+
+                
+                ram_ad => ram_ad,
+		ram_d  => ram_d,
+		ram_q  => ram_q,
+		ram_cs => ram_cs,
+		ram_oe => ram_oe,
+		ram_we => ram_we
                 );
     
 

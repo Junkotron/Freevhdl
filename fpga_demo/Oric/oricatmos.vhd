@@ -43,7 +43,7 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.all;
 ENTITY oricatmos IS
 	PORT (
-                CLK_IN : IN STD_LOGIC;
+		CLK_IN : IN STD_LOGIC;
 		RESET : IN STD_LOGIC;
 		key_pressed : IN STD_LOGIC;
 		key_extended : IN STD_LOGIC;
@@ -454,8 +454,7 @@ BEGIN
 			addr => cpu_ad(12 DOWNTO 0),
 			data => ROM_MD_DO
 		);
-
-        inst_ula : ENTITY work.ULA
+	inst_ula : ENTITY work.ULA
 		PORT MAP(
 			CLK => CLK_IN,
 			PHI2 => ula_phi2,
@@ -465,7 +464,7 @@ BEGIN
 			RW => cpu_rw,
 
 --			RESETn => pll_locked, --RESETn,
-			RESETn => RESETn,
+ 			RESETn => RESETn,
 
 			MAPn => cont_MAPn,
 			DB => SRAM_DO,

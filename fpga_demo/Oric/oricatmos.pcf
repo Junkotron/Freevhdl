@@ -1,48 +1,50 @@
 
-set_io test_pin F2 # This is currently the yellow cable to the
-                   # serial port on the "ruska" we abuse
+# Basic sanity test
+#set_io CLK_TEST F2
 
-set_io CLK_IN J3
+set_io oric.inst_cpu.clk F2
+
+
+
+set_io CLK_EXT J3
 set_io tape_byte_enable J5
 set_io phi2 C2
 
 # button low when pressed
 set_io RESET_BUT1 K11
 
-# TODO Get rid of this!!!
-#set_io ram_cs T6
-set_io oric.ula_phi2 T6
+set_io ram_cs T6
 set_io ram_oe L9
 set_io ram_we T7
 
 
-set_io a[0] N6
-set_io a[1] T1
-set_io a[2] P4
-set_io a[3] R2
-set_io a[4] N5
-set_io a[5] T2
-set_io a[6] P5
-set_io a[7] R3
-set_io a[8] R5
-set_io a[9] T3
-set_io a[10] R4
-set_io a[11] M7
-set_io a[12] N7
-set_io a[13] P6
-set_io a[14] M8
-set_io a[15] T5
-set_io a[16] R6
-set_io a[17] P8
+set_io ram_ad[0] N6
+set_io ram_ad[1] T1
+set_io ram_ad[2] P4
+set_io ram_ad[3] R2
+set_io ram_ad[4] N5
+set_io ram_ad[5] T2
+set_io ram_ad[6] P5
+set_io ram_ad[7] R3
+set_io ram_ad[8] R5
+set_io ram_ad[9] T3
+set_io ram_ad[10] R4
+set_io ram_ad[11] M7
+set_io ram_ad[12] N7
+set_io ram_ad[13] P6
+set_io ram_ad[14] M8
+set_io ram_ad[15] T5
+#set_io a[16] R6
+#set_io a[17] P8
 
-set_io d[0] T8
-set_io d[1] P7
-set_io d[2] N9
-set_io d[3] T9
-set_io d[4] M9
-set_io d[5] R9
-set_io d[6] K9
-set_io d[7] P9
+set_io ram_dq[0] T8
+set_io ram_dq[1] P7
+set_io ram_dq[2] N9
+set_io ram_dq[3] T9
+set_io ram_dq[4] M9
+set_io ram_dq[5] R9
+set_io ram_dq[6] K9
+set_io ram_dq[7] P9
 
 
 

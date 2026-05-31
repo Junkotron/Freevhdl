@@ -1,0 +1,10 @@
+
+One needs to add to three places the signal one wants to see
+
+in the setattr line of "yo_xxx.txt"
+in the expose line of "yo_xxx.txt"
+
+and in the set_io line of "oricatmos.pcf" for the desired output
+
+Then it is wise to check the output from the yosys < yo_xxx.txt to 
+see that the port is indeed in the portlist

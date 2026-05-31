@@ -1,5 +1,7 @@
 
+IO_LOC "oric.inst_cpu.clk" R9
 IO_LOC "tape_byte_enable" H11;
+
 IO_LOC "phi2" A13;
 IO_LOC "RESET" A14;
 IO_LOC "pravetz_layout" A15;
