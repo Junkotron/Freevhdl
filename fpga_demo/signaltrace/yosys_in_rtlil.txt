@@ -1,0 +1,15 @@
+read_rtlil st_ice40.rtlil
+
+hierarchy -top sttop
+flatten
+proc
+
+#expose sttop/u_clk_divider.logprobe_bit
+
+setattr -set keep 1 \sttop/u_clk_divider.logprobe_bit
+
+expose \sttop/u_clk_divider.logprobe_bit
+
+
+write_rtlil result.rtlil
+
