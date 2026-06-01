@@ -7,7 +7,7 @@ else
     git clone https://github.com/nikiiv/Oric_MiSTer.git
 fi
 
-VHDL_FILE_LIST="microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd divn.vhd oricatmos.vhd"
+VHDL_FILE_LIST="reset_logic.vhd microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd divn.vhd oricatmos.vhd"
 
 MISC_FILE_LIST="oricatmos.pcf oricatmos.cst mk_oric.sh divn.vhd tristate.v yo_gowin.txt yo_ice40.txt"
 

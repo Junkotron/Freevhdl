@@ -29,7 +29,7 @@ for i in $DISKS; do
     ghdl -a $FLAGS rom/$i
 done
 
-ORIC="divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd"
+ORIC="reset_logic.vhd divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd"
 
 
 for i in $ORIC; do

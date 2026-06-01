@@ -91,10 +91,10 @@ ARCHITECTURE RTL OF oricatmostop_ice40 IS
 -- Connected via tristate/bidirectional buffer 
 signal ram_d : STD_LOGIC_VECTOR(7 DOWNTO 0);
 signal ram_q : STD_LOGIC_VECTOR(7 DOWNTO 0);
-
-
   
 signal RESET : std_logic;
+
+signal S_RESLOG : std_logic;
   
 signal s_tape_byte_enable : STD_LOGIC;
 
@@ -116,7 +116,14 @@ end COMPONENT;
 BEGIN
   CLK_TEST <= CLK_EXT;
 
-  RESET <= not RESET_BUT1;
+
+  reslog: entity work.startup_reset(rtl)
+    port map(
+      CLK_25MHz,
+      S_RESLOG
+    );
+          
+  RESET <= not S_RESLOG or not RESET_BUT1;
   
   s_tape_byte_enable <= '0';
   s_via_snap_t2c_data <= (others => '0');
