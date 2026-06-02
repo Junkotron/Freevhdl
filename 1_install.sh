@@ -14,7 +14,7 @@ sudo apt-get clean -y
 sudo apt-get autoclean -y
 
 sudo apt -y install curl
-sudo apt -y install openssh-server
+sudo apt -y install openssh-server net-tools
 
 # take a backup before yosys & chums
 # begin to dilly-dally here

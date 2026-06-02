@@ -1,10 +1,42 @@
 
 One needs to add to three places the signal one wants to see
 
+If possible Chose a non-common signal name that wont match a lot in the
+gargantuan log file, for this example we call it "r_w_n"
+
 in the setattr line of "yo_xxx.txt"
 in the expose line of "yo_xxx.txt"
 
-and in the set_io line of "oricatmos.pcf" for the desired output
+and in the set_io line of "oricatmos.pcf" for the desired output pin
 
-Then it is wise to check the output from the yosys < yo_xxx.txt to 
-see that the port is indeed in the portlist
+At this point it is not certain but it seems yosys & pals always
+converts your vhdl signal names to lower casse
+
+./checkout_and_build 2>&1 | tee /tmp/some_temp_file.txt
+
+grep r_w_n /tmp/some_temp_file.txt
+
+.. something like ..
+
+
+yosys> setattr -set keep 1 \oricatmostop_ice40/w:oric.inst_cpu.r_w_n
+yosys> expose \oricatmostop_ice40/w:oric.inst_cpu.r_w_n
+New module port: oricatmostop_ice40/oric.inst_cpu.r_w_n
+output [0:0] oric.inst_cpu.r_w_n
+Info: constrained 'oric.inst_cpu.r_w_n' to bel 'X0/Y21/io0'
+
+Especially check that the .pcf entry is "constrained"
+
+vector signals
+
+Although it has not been verified working yet it seems that if one takes
+the name of the signal just as above in yo_xxxx.txt file:
+setattr .... \oricatmostop_ice40/w:oric.inst_cpu.mybus
+expose \oricatmostop_ice40/w:oric.inst_cpu.mybus
+
+one can access the #3 index like:
+
+set_io oric.mybus[3] F2
+or similar
+
+this will produce a lot of warnings for the unspecified bus pins

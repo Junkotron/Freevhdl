@@ -1,0 +1,56 @@
+
+
+
+### Free below ###
+
+#Log analyer for now
+
+#set_io oric.inst_cpu.clk F2
+
+set_io atest F2
+
+#set_io led_out[0] F2
+#set_io CLK_1MHz F2
+
+# External 100MHz
+set_io clk_in J3
+
+# Real world blinkenlights
+#set_io led_out[0] F2
+
+# Buts and leds..
+#set_io led1 M12
+#set_io led2 R16
+
+#set_io but1 K11
+#set_io but2 P13
+
+
+# anybodies
+# set_io  J5
+# set_io  C2
+# set_io  F3
+# set_io  E2
+# set_io  E3
+# set_io  H6
+# set_io  F1
+# set_io  M12
+# set_io  D2
+# set_io  F4
+# set_io  P13
+# set_io  G3
+# set_io  G4
+# set_io  G5
+# set_io  H2
+# set_io  R16
+# set_io  H4
+# set_io  H5
+# set_io  E4
+# set_io  B2
+# set_io  F5
+# set_io  H1
+# set_io  G1
+# set_io  H3
+# set_io  D1
+
+
