@@ -1,5 +1,5 @@
-// Klocka (Inbyggd 12 MHz oscillator)
-IO_LOC "clk" 35;
+// Klocka (100MHz extern osc)
+IO_LOC "clk" 63;
 IO_PORT "clk" IO_TYPE=LVCMOS33;
 
 // De 8 röda lysdioderna (User LEDs)

@@ -32,3 +32,9 @@ nextpnr-himbaechel --json blinken.json \
 
 gowin_pack -d $FAMILY -o blinken_$BOARD.fs blinken_pnr.json
 
+
+echo "You should now be able to at your own peril download this"
+echo "to the tec0117 board with:"
+
+echo
+echo "sudo openFPGALoader -b tangnano9k blinken_littlebee9k.fs"
