@@ -2,7 +2,7 @@
 
 mkdir -p old 
 
-mv *~ old/
+mv svcd vcdextract *.vcd *~ old/
 
 
 pushd Oric_MiSTer/rtl
@@ -14,7 +14,7 @@ mkdir -p old
 chmod u+w old/*
 
 
-mv mk_oric.sh *.rtlil *.json *~ *.bin *.asc *.fs old/
+mv *.vcd work-obj*.cf mk_oric.sh *.rtlil *.json *~ *.bin *.asc *.fs old/
 
 popd
 
