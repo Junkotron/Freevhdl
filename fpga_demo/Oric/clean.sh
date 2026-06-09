@@ -2,7 +2,7 @@
 
 mkdir -p old 
 
-mv svcd vcdextract *.vcd *~ old/
+mv "#*" svcd vcdextract *.vcd *~ old/
 
 
 pushd Oric_MiSTer/rtl

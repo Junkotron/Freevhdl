@@ -310,6 +310,14 @@ int main(int argc, char *argv[])
 
   char* timescale="";
   
+  // With the filtering we only want one hash thingy in
+  // consequence
+  // TODO: should be the closest before signal change we
+  // actually print
+  
+  int last_was_hash=0;
+
+
   if (argc==3)
     timescale=argv[2];
   
@@ -418,18 +426,21 @@ int main(int argc, char *argv[])
 	  // Now begins the signal values as such
 	  break;
 	}
+      else if (buff[0]=='#')
+	{
+	  // alternative handling for ghdl dialect missing
+	  // "$dumpvars" line
+
+	  echo(buff);
+	  last_was_hash=1;
+	  break;
+	}
       else
 	{
 	  echo(buff);
 	}
     }
 
-  // With the filtering we only want one hash thingy in
-  // consequence
-  // TODO: should be the closest before signal change we
-  // actually print
-  
-  int last_was_hash;
   
   while (!feof(FILEIN))
     {

@@ -10,6 +10,9 @@ architecture sim of top_t65_system_sim is
   signal husklocka: std_logic;
 begin
   computer: entity work.top_t65_system(rtl)
+    generic map(
+      CLK_FREQ_HZ => 20 -- short reset with simulation 
+      )
     port map(
       clk_in => husklocka
       );

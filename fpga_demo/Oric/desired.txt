@@ -1,7 +1,8 @@
-top_t65_system_sim.husklocka
 top_t65_system_sim.computer.s_reset_n
+top_t65_system_sim.computer.cpuclk
 top_t65_system_sim.computer.cpu_rw_n
 top_t65_system_sim.computer.cpu_addr[23:0]
+top_t65_system_sim.computer.addr16[15:0]
 top_t65_system_sim.computer.cpu_data_in[7:0]
 top_t65_system_sim.computer.cpu_data_out[7:0]
 

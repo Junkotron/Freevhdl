@@ -7,7 +7,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity startup_reset is
     generic (
-        CLK_FREQ_HZ : integer := 25_000_000 -- Adjust to match your board clock
+      CLK_FREQ_HZ : integer := 25_000_000 -- Adjust to match your board clock
     );
     port (
         clk       : in  std_logic;
@@ -25,7 +25,7 @@ begin
 
     -- Drive output directly from the register
     reset_out <= rst_reg;
-
+  
     -- Synchronous Counter Process
     process(clk)
     begin

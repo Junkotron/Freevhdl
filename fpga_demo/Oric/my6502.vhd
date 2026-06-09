@@ -3,13 +3,16 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity top_t65_system is
+  generic (
+    CLK_FREQ_HZ : INTEGER := 100_000_000
+  );
   port (
     clk_in   : in  std_logic;                     -- Systemklocka (t.ex. 10 MHz)
     led_out  : out std_logic_vector(7 downto 0);   -- Exempelutgång för att se att CPU:n kör
     CLK_1MHz : out std_logic;
 
     atest : out std_logic
-    );
+  );
 end entity top_t65_system;
 
 architecture rtl of top_t65_system is
@@ -26,6 +29,8 @@ architecture rtl of top_t65_system is
   signal cpu_addr    : std_logic_vector(23 downto 0);
   signal cpu_data_in : std_logic_vector(7 downto 0);
   signal cpu_data_out: std_logic_vector(7 downto 0);
+
+  signal addr16 : std_logic_vector(15 downto 0);
   
   -- Ett enkelt internt minne (ROM) fyllt med 6502-maskinkod
   type rom_type is array (0 to 31) of std_logic_vector(7 downto 0);
@@ -50,10 +55,12 @@ architecture rtl of top_t65_system is
 
   signal reg_leds : std_logic_vector(7 downto 0) := X"00";
 
---  signal clk_1MHz : std_logic;
+  signal cpuclk : std_logic;
 
 begin
 
+  addr16 <= cpu_addr(15 downto 0);
+  
 --  atest <= cpu_addr(1);
   atest <= cpu_data_in(1);
   
@@ -65,10 +72,10 @@ begin
     port map (
       clk_in => clk_in,
       reset => '0',
-      clk_out => CLK_1MHZ
+      clk_out => cpuclk
     );
 
-
+  CLK_1MHz <= cpuclk;
 
   
   -- Koppla utgången till vårt interna LED-register
@@ -77,7 +84,7 @@ begin
   -- Instansiera återställningsmodulen (1 sekund vid 100 MHz)
   u_reset : entity work.startup_reset
     generic map (
-      CLK_FREQ_HZ => 100_000_000
+      CLK_FREQ_HZ => CLK_FREQ_HZ
       )
     port map (
       clk       => clk_in,
