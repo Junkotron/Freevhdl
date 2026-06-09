@@ -2,9 +2,12 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
+use work.T65_Pack.all;
+
 entity top_t65_system is
   generic (
-    CLK_FREQ_HZ : INTEGER := 100_000_000
+    CLK_FREQ_HZ : INTEGER := 100_000_000;
+    DELAY : std_logic_vector(7 downto 0) := X"FA" -- will do both loops i.e. quadratic time
   );
   port (
     clk_in   : in  std_logic;                     -- Systemklocka (t.ex. 10 MHz)
@@ -38,22 +41,52 @@ architecture rtl of top_t65_system is
   
   -- Ett enkelt internt minne (ROM) fyllt med 6502-maskinkod
   type rom_type is array (0 to 31) of std_logic_vector(7 downto 0);
-  -- Programmet gör: LDA #$55 -> STA $4000 -> JMP $F000 (Loopar oändligt)
-  constant my_rom : rom_type := (
-    0 => X"A9", 1 => "01010011",        -- LDA #$53(Ladda ackumulatorn med hex 53)
-    2 => X"8D", 3 => X"00", 4 => X"40", -- STA $4000 (Skriv till LED-adressen)
-    5 => X"EA", 6 => X"EA", 7 => X"EA",  -- NOPs to make 50% duty approx
-    8 => X"A9", 9 => "01010010",        -- LDA #$52 (Ladda ackumulatorn med hex 52)
-    10 => X"8D", 11 => X"00", 12 => X"40", -- STA $4000 (Skriv till LED-adressen)
-    13 => X"4C", 14 => X"00", 15 => X"F0", -- $F005: JMP $F000 (Hoppa tillbaka till start)
 
+  -- Programmet gör: (special thanks to jsk)
+  -- L1:        F000
+  --  LDY DELAY F000 A0 DELAY
+  -- L2:        F002
+  --  LDX DELAY F002 A2 DELAY
+  -- L3:        F004
+  --  DEX       F004 CA
+  --  BNE L3    F005 D0 FD ; -3
+  --  DEY       F007 88
+  --  BNE L2    F008 D0 F8 ; -8
+  --  CLC       F00A 18
+  --  ADC #1    F00B 69 01
+  --  STA $4000 F00D 8D 00 40
+  --  JMP L1    F010 4C 00 F0
+  
+  constant my_rom : rom_type := (
+
+
+    0 => X"A0",
+    1 => DELAY,
+    2 => X"A2",
+    3 => DELAY,
+    4 => X"CA",
+    5 => X"D0",
+    6 => X"FD",
+    7 => X"88",
+    8 => X"D0",
+    9 => X"F8",
+    10 => X"18",
+    11 => X"69",
+    12 => X"01",
+    13 => X"8D",
+    14 => X"00",
+    15 => X"40",
+    16 => X"4C",
+    17 => X"00",
+    18 => X"F0",
+    
     -- Fyll resten med NOP (No Operation) fram till reset-vektorerna
-    16 => X"EA", 17 => X"EA", 18 => X"EA", 19 => X"EA",
+    19 => X"EA",
     20 => X"EA", 21 => X"EA", 22 => X"EA", 23 => X"EA",
     24 => X"EA", 25 => X"EA", 26 => X"EA", 27 => X"EA",
     
     -- $FFFC och $FFFD: Reset Vector (Pekar på var CPU ska starta: $F000)
-    28 => X"00",             -- $FFFC: Low byte av startadress
+    28 => X"00",              -- $FFFC: Low byte av startadress
     29 => X"F0",              -- $FFFD: High byte av startadress
 
     30 => X"EA", 31 => X"EA"
@@ -63,8 +96,16 @@ architecture rtl of top_t65_system is
 
   signal cpuclk : std_logic;
 
+  signal DEBUG : T_t65_dbg;
+
+  signal a : std_logic_vector(7 downto 0);
+  
 begin
 
+  -- extract desired registers from DEBUG svcd cant read complex types
+  -- it seems
+  a <= DEBUG.A;
+  
   addrlo <= cpu_addr(7 downto 0);
   addrhi <= cpu_addr(15 downto 8);
   
@@ -117,7 +158,8 @@ begin
       R_W_n => cpu_rw_n,
       A => cpu_addr,
       DI => cpu_data_in,
-      DO => cpu_data_out
+      DO => cpu_data_out,
+      DEBUG => DEBUG
       );
 
   -- Synkron minneshantering och I/O (Helt fritt från dolda latchar)
@@ -133,7 +175,7 @@ begin
         cpu_data_in <= X"EA"; -- NOP instruktion som fallback
 
         -- 1. Avkoda Reset Vector ($FFFC - $FFFD) samt ROM ($F000 - $F007)
-        if cpu_addr(15 downto 4) = X"FFF" or cpu_addr(15 downto 4) = "111100000000" then
+        if cpu_addr(15 downto 4) = X"FFF" or cpu_addr(15 downto 5) = "11110000000" then
           -- Räkna ut index i vår lilla 32-bytes array
           rom_index := to_integer(unsigned(cpu_addr(4 downto 0)));
           cpu_data_in <= my_rom(rom_index);

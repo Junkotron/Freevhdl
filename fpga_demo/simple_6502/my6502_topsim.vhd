@@ -11,7 +11,8 @@ architecture sim of top_t65_system_sim is
 begin
   computer: entity work.top_t65_system(rtl)
     generic map(
-      CLK_FREQ_HZ => 20 -- short reset with simulation 
+      CLK_FREQ_HZ => 20, -- short reset with simulation
+      DELAY => X"02"         -- Bareable in wave viewer...
       )
     port map(
       clk_in => husklocka
