@@ -30,7 +30,8 @@ architecture rtl of top_t65_system is
   signal cpu_data_in : std_logic_vector(7 downto 0);
   signal cpu_data_out: std_logic_vector(7 downto 0);
 
-  signal addr16 : std_logic_vector(15 downto 0);
+  signal addrlo : std_logic_vector(7 downto 0);
+  signal addrhi : std_logic_vector(7 downto 0);
   
   -- Ett enkelt internt minne (ROM) fyllt med 6502-maskinkod
   type rom_type is array (0 to 31) of std_logic_vector(7 downto 0);
@@ -59,7 +60,8 @@ architecture rtl of top_t65_system is
 
 begin
 
-  addr16 <= cpu_addr(15 downto 0);
+  addrlo <= cpu_addr(7 downto 0);
+  addrhi <= cpu_addr(15 downto 8);
   
 --  atest <= cpu_addr(1);
   atest <= cpu_data_in(1);
