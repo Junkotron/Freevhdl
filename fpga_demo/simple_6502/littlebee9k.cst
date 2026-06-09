@@ -1,0 +1,29 @@
+// Klocka (100MHz extern osc)
+IO_LOC "husklocka" 63;
+IO_PORT "husklocka" IO_TYPE=LVCMOS33;
+
+// De 8 röda lysdioderna (User LEDs)
+// IO_LOC "leds[0]" 86;
+// IO_PORT "leds[0]" IO_TYPE=LVCMOS33;
+
+// IO_LOC "leds[1]" 85;
+// IO_PORT "leds[1]" IO_TYPE=LVCMOS33;
+
+// IO_LOC "leds[2]" 84;
+// IO_PORT "leds[2]" IO_TYPE=LVCMOS33;
+
+// IO_LOC "leds[3]" 83;
+// IO_PORT "leds[3]" IO_TYPE=LVCMOS33;
+
+// IO_LOC "leds[4]" 82;
+// IO_PORT "leds[4]" IO_TYPE=LVCMOS33;
+
+// IO_LOC "leds[5]" 81;
+// IO_PORT "leds[5]" IO_TYPE=LVCMOS33;
+
+// IO_LOC "leds[6]" 80;
+// IO_PORT "leds[6]" IO_TYPE=LVCMOS33;
+
+// IO_LOC "leds[7]" 79;
+// IO_PORT "leds[7]" IO_TYPE=LVCMOS33;
+

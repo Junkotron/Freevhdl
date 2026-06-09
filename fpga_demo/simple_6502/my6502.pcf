@@ -1,13 +1,16 @@
 
 
 
-### Free below ###
 
 #Log analyer for now
+set_io atest F2
 
+# Example access "further down"
 #set_io oric.inst_cpu.clk F2
 
-set_io atest F2
+# Real world blinkenlights
+set_io led_out[0] M12
+set_io led_out[1] R16
 
 #set_io led_out[0] F2
 #set_io CLK_1MHz F2
@@ -15,8 +18,7 @@ set_io atest F2
 # External 100MHz
 set_io clk_in J3
 
-# Real world blinkenlights
-#set_io led_out[0] F2
+
 
 # Buts and leds..
 #set_io led1 M12
@@ -25,6 +27,7 @@ set_io clk_in J3
 #set_io but1 K11
 #set_io but2 P13
 
+### Free below ###
 
 # anybodies
 # set_io  J5

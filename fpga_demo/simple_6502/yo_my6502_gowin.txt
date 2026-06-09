@@ -1,0 +1,20 @@
+
+
+read_rtlil my6502_gowin.rtlil
+hierarchy -top top_t65_system_gowin
+flatten
+proc
+
+# One can write a single "expose" to get the full list...
+# if one is uncertain of which names they get
+# One needs to add the "\" here but not into the pcf/cst files...
+
+
+# TODO: if needed we can find useful names for these
+#setattr -set keep 1 \top_t65_system_gowin/w:oric.inst_cpu.clk
+#expose \top_t65_system_gowin/w:oric.inst_cpu.clk
+
+portlist
+
+write_rtlil modified_gowin.rtlil
+

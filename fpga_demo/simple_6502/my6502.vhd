@@ -11,6 +11,9 @@ entity top_t65_system is
     led_out  : out std_logic_vector(7 downto 0);   -- Exempelutgång för att se att CPU:n kör
     CLK_1MHz : out std_logic;
 
+    led1 : out std_logic;
+    led2 : out std_logic;
+  
     atest : out std_logic
   );
 end entity top_t65_system;
@@ -39,11 +42,11 @@ architecture rtl of top_t65_system is
   constant my_rom : rom_type := (
     0 => X"A9", 1 => "01010011",        -- LDA #$53(Ladda ackumulatorn med hex 53)
     2 => X"8D", 3 => X"00", 4 => X"40", -- STA $4000 (Skriv till LED-adressen)
-    5 => X"EA", 6 => X"EA", 7 => X"EA",  -- NOPs to make 50% duty
+    5 => X"EA", 6 => X"EA", 7 => X"EA",  -- NOPs to make 50% duty approx
     8 => X"A9", 9 => "01010010",        -- LDA #$52 (Ladda ackumulatorn med hex 52)
     10 => X"8D", 11 => X"00", 12 => X"40", -- STA $4000 (Skriv till LED-adressen)
     13 => X"4C", 14 => X"00", 15 => X"F0", -- $F005: JMP $F000 (Hoppa tillbaka till start)
-    
+
     -- Fyll resten med NOP (No Operation) fram till reset-vektorerna
     16 => X"EA", 17 => X"EA", 18 => X"EA", 19 => X"EA",
     20 => X"EA", 21 => X"EA", 22 => X"EA", 23 => X"EA",
@@ -66,13 +69,17 @@ begin
   addrhi <= cpu_addr(15 downto 8);
   
 --  atest <= cpu_addr(1);
-  atest <= cpu_data_in(1);
+--  atest <= cpu_data_in(1);
+  atest <= reg_leds(0);
+  led1 <= reg_leds(0);
+  led2 <= reg_leds(1);
+  
   
   -- obtain 25MHz for 6502... the important thing is that the memory
   -- handler is quicker
   div1mhz: entity work.clock_divider_n(Behavioral)
     generic map (
-      N => 4
+      N => 100 
     )
     port map (
       clk_in => clk_in,

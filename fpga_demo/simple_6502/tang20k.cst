@@ -1,0 +1,6 @@
+
+
+// ******** THIS IS MOST LIKELY WRONG AND NEED TO BE CHECKED
+IO_LOC "husklocka" R9;
+IO_PORT "husklocka" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+

@@ -1,4 +1,3 @@
--
 -- A simulation model of ORIC ATMOS hardware
 -- Copyright (c) SEILEBOST - March 2006
 -- 
