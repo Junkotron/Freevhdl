@@ -44,7 +44,7 @@ gcc -o svcd svcd.c
 
 # extract signals for demo...
 
-./vcdextract desired.txt 5ns < Oric_MiSTer/rtl/waveform6502.vcd > wavefilter6502.vcd
+./vcdextract desired.txt < Oric_MiSTer/rtl/waveform6502.vcd > wavefilter6502.vcd
 
 echo "If all went well you can now view some signals with ./svcd wavefilter6502.vcd"
 echo "Other possible tools are gtkwave or VaporView"

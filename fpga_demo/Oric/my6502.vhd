@@ -37,21 +37,23 @@ architecture rtl of top_t65_system is
   type rom_type is array (0 to 31) of std_logic_vector(7 downto 0);
   -- Programmet gör: LDA #$55 -> STA $4000 -> JMP $F000 (Loopar oändligt)
   constant my_rom : rom_type := (
-    0 => X"A9", 1 => X"55",  -- $F000: LDA #$55 (Ladda ackumulatorn med hex 55)
-    2 => X"8D", 3 => X"00", 4 => X"40", -- $F002: STA $4000 (Skriv till LED-adressen)
-    5 => X"4C", 6 => X"00", 7 => X"F0", -- $F005: JMP $F000 (Hoppa tillbaka till start)
+    0 => X"A9", 1 => "01010011",        -- LDA #$53(Ladda ackumulatorn med hex 53)
+    2 => X"8D", 3 => X"00", 4 => X"40", -- STA $4000 (Skriv till LED-adressen)
+    5 => X"EA", 6 => X"EA", 7 => X"EA",  -- NOPs to make 50% duty
+    8 => X"A9", 9 => "01010010",        -- LDA #$52 (Ladda ackumulatorn med hex 52)
+    10 => X"8D", 11 => X"00", 12 => X"40", -- STA $4000 (Skriv till LED-adressen)
+    13 => X"4C", 14 => X"00", 15 => X"F0", -- $F005: JMP $F000 (Hoppa tillbaka till start)
     
     -- Fyll resten med NOP (No Operation) fram till reset-vektorerna
-    8 => X"EA", 9 => X"EA", 10 => X"EA", 11 => X"EA",
-    12 => X"EA", 13 => X"EA", 14 => X"EA", 15 => X"EA",
     16 => X"EA", 17 => X"EA", 18 => X"EA", 19 => X"EA",
     20 => X"EA", 21 => X"EA", 22 => X"EA", 23 => X"EA",
     24 => X"EA", 25 => X"EA", 26 => X"EA", 27 => X"EA",
-    28 => X"EA", 29 => X"EA",
     
     -- $FFFC och $FFFD: Reset Vector (Pekar på var CPU ska starta: $F000)
-    30 => X"00",             -- $FFFC: Low byte av startadress
-    31 => X"F0"              -- $FFFD: High byte av startadress
+    28 => X"00",             -- $FFFC: Low byte av startadress
+    29 => X"F0",              -- $FFFD: High byte av startadress
+
+    30 => X"EA", 31 => X"EA"
     );
 
   signal reg_leds : std_logic_vector(7 downto 0) := X"00";
@@ -66,10 +68,11 @@ begin
 --  atest <= cpu_addr(1);
   atest <= cpu_data_in(1);
   
-  -- obtain 1MHz for 6502...
+  -- obtain 25MHz for 6502... the important thing is that the memory
+  -- handler is quicker
   div1mhz: entity work.clock_divider_n(Behavioral)
     generic map (
-      N => 100
+      N => 4
     )
     port map (
       clk_in => clk_in,
@@ -98,7 +101,7 @@ begin
       Mode => "00",
       Res_n => s_reset_n,       -- Styrs av vår säkra startup-reset
       Enable => '1',
-      Clk => clk_in,
+      Clk => cpuclk,
       Rdy => '1',
       Abort_n => '1',
       IRQ_n => '1',
@@ -123,13 +126,13 @@ begin
         cpu_data_in <= X"EA"; -- NOP instruktion som fallback
 
         -- 1. Avkoda Reset Vector ($FFFC - $FFFD) samt ROM ($F000 - $F007)
-        if cpu_addr(15 downto 4) = X"FFF" or cpu_addr(15 downto 3) = "1111000000000" then
+        if cpu_addr(15 downto 4) = X"FFF" or cpu_addr(15 downto 4) = "111100000000" then
           -- Räkna ut index i vår lilla 32-bytes array
           rom_index := to_integer(unsigned(cpu_addr(4 downto 0)));
           cpu_data_in <= my_rom(rom_index);
           
         -- 2. Avkoda I/O-port för lysdioder (Skrivning till adress $4000)
-        elsif cpu_addr = X"4000" then
+        elsif cpu_addr(15 downto 0) = X"4000" then
           if cpu_rw_n = '0' then -- CPU skriver
             reg_leds <= cpu_data_out;
           end if;
