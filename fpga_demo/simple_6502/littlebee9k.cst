@@ -2,12 +2,30 @@
 IO_LOC "husklocka" 63;
 IO_PORT "husklocka" IO_TYPE=LVCMOS33;
 
-// De 8 röda lysdioderna (User LEDs)
-// IO_LOC "leds[0]" 86;
-// IO_PORT "leds[0]" IO_TYPE=LVCMOS33;
 
-// IO_LOC "leds[1]" 85;
-// IO_PORT "leds[1]" IO_TYPE=LVCMOS33;
+// GW1NR-LV9
+// Start with the dot in the left uppercorner
+// then count 22 pins on the left side
+// then on the lower side going from the left
+// you can see that ping 23..24..25
+// 25 is connected to the fifth 100-mil hole
+// from the left.
+// This way most of the pins can be identified
+// the docs are very confusing since the edge
+// dip connector pins are not shown on the schematic
+// gnd can be found on the upper row fourth from the left
+IO_LOC "atest" 25;
+IO_PORT "atest" IO_TYPE=LVCMOS33;
+
+// De 8 röda lysdioderna (User LEDs)
+// Led[0]
+IO_LOC "led1" 86;
+IO_PORT "led1" IO_TYPE=LVCMOS33;
+
+// Led[1]
+IO_LOC "led2" 85;
+//IO_LOC "led2" 25;
+IO_PORT "led2" IO_TYPE=LVCMOS33;
 
 // IO_LOC "leds[2]" 84;
 // IO_PORT "leds[2]" IO_TYPE=LVCMOS33;

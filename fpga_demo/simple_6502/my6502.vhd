@@ -79,7 +79,7 @@ begin
   -- handler is quicker
   div1mhz: entity work.clock_divider_n(Behavioral)
     generic map (
-      N => 100 
+      N => 100
     )
     port map (
       clk_in => clk_in,
