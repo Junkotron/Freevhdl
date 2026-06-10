@@ -3,4 +3,4 @@
 
 mkdir -p old
 
-mv *~ blinken.cpp tb old
+mv *_gen.cpp work*.cf *.rtlil *~ tb_vec old
