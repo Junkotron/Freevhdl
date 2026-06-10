@@ -1,4 +1,6 @@
 
+Currently works on Ubuntu 26.04 LTS :)
+
 The process here differs from the pi's and
 rock's since the installation media does not
 "mutate" but a second disk is required for the target.

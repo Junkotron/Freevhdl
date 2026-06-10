@@ -50,10 +50,7 @@ chmod a+rx Download/Logic-2.4.44-linux-x64.AppImage
 
 
 cd
-mkdir -p fpga_demo
-cd fpga_demo
 tar xvf /home/fpga_demo.tar
-cd
 
 # If sudo times out it should suffice to re-run this
 /home/fpga_sudo_install.sh

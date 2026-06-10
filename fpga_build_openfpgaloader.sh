@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curl https://github.com/trabucayre/openFPGALoader.git
+git clone https://github.com/trabucayre/openFPGALoader.git
 
 cd openFPGALoader/
 

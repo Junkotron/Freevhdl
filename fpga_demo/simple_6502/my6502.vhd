@@ -43,19 +43,19 @@ architecture rtl of top_t65_system is
   type rom_type is array (0 to 31) of std_logic_vector(7 downto 0);
 
   -- Programmet gör: (special thanks to jsk)
-  -- L1:        F000
-  --  LDY DELAY F000 A0 DELAY
-  -- L2:        F002
-  --  LDX DELAY F002 A2 DELAY
-  -- L3:        F004
-  --  DEX       F004 CA
-  --  BNE L3    F005 D0 FD ; -3
-  --  DEY       F007 88
-  --  BNE L2    F008 D0 F8 ; -8
-  --  CLC       F00A 18
-  --  ADC #1    F00B 69 01
-  --  STA $4000 F00D 8D 00 40
-  --  JMP L1    F010 4C 00 F0
+  -- L1:         F000
+  --  LDY #DELAY F000 A0 DELAY
+  -- L2:         F002
+  --  LDX #DELAY F002 A2 DELAY
+  -- L3:         F004
+  --  DEX        F004 CA
+  --  BNE L3     F005 D0 FD ; -3
+  --  DEY        F007 88
+  --  BNE L2     F008 D0 F8 ; -8
+  --  CLC        F00A 18
+  --  ADC #1     F00B 69 01
+  --  STA $4000  F00D 8D 00 40
+  --  JMP L1     F010 4C 00 F0
   
   constant my_rom : rom_type := (
 
