@@ -20,9 +20,5 @@ cd build
 time make
 cd
 
-git clone https://github.com/ghdl/ghdl-yosys-plugin.git
-cd ghdl-yosys-plugin/
-time make
-cd
 
 

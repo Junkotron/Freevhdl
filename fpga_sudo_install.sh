@@ -9,9 +9,14 @@ cd yosys
 sudo make install
 cd
 
-cd ghdl-yosys-plugin
+# Needs to be here since it requires 
+git clone https://github.com/ghdl/ghdl-yosys-plugin.git
+cd ghdl-yosys-plugin/
+time make
 sudo mkdir -p /usr/local/share/yosys/plugins
 sudo cp ghdl.so /usr/local/share/yosys/plugins/
+cd
+
 cd
 
 cd icestorm
