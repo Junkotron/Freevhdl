@@ -1,6 +1,30 @@
 
 
-// ******** THIS IS MOST LIKELY WRONG AND NEED TO BE CHECKED
-IO_LOC "husklocka" R9;
+IO_LOC "husklocka" 4;
 IO_PORT "husklocka" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+// Actually the 9k starts its leds with "1" and the
+// 20k with "0" but i refuse to yield for that :p
+// Also the 20k has leds go on when writing a zero
+// so our proud counter will be inverted for now :)
+// As a final comment the master clock used is 27 instead of 100
+// so our 6502 speed daemon will clock in at about 270 kHz
+// actually this is kinda good since the current delay loop
+// runs at about .3s so we get a near perfect second delay
+// in this counter. blabla eggsallad
+IO_LOC "led1" 15;
+IO_LOC "led2" 16;
+IO_LOC "led3" 17;
+IO_LOC "led4" 18;
+IO_LOC "led5" 19;
+IO_LOC "led6" 20;
+
+
+// Closest to the edge where "S1" is
+IO_LOC "atest" 71;
+
+// Just assign two leds so we dont have to maintain two versions
+// this will probably come back and bite us at some point :p
+IO_LOC "led7" 74;
+IO_LOC "led8" 75;
 

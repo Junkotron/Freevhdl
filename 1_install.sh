@@ -36,9 +36,18 @@ fi
 sudo add-apt-repository -y universe
 sudo apt -y install libfuse2t64
 
-https://logic2api.saleae.com/download?os=linux&arch=x64
 
-chmod a+rx Download/Logic-2.4.44-linux-x64.AppImage
+MACH=`uname -m`
+if [ $MACH == "aarch64" ]; then
+    echo "Arm load for saleae not automated"
+    sleep 1
+else
+    SALEAE=Download/Logic-2.4.44-linux-x64.AppImage
+fi
+
+curl "http://logic2api.saleae.com/download?os=linux&arch=arm64&release_channel=insider" -o $SALEAE
+
+chmod a+rx $SALEAE
 
 
 

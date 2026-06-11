@@ -75,14 +75,14 @@ if  [ $PLATTFORM == "gowin" ]; then
 
 
     # tang "littlebee" 9k...
-    DEVICE="GW1NR-LV9QN88PC6/I5"
-    BOARD=littlebee9k
-    FAMILY=GW1N-9
+#    DEVICE="GW1NR-LV9QN88PC6/I5"
+#    BOARD=littlebee9k
+#    FAMILY=GW1N-9
 
     # tang 20k
-#    DEVICE="GW2A-LV18PG256C7/I6"
-#    BOARD=tang20k
-#    FAMILY=GW2A-18
+    DEVICE="GW2AR-LV18QN88C8/I7"
+    BOARD=tang20k
+    FAMILY=GW2A-18C
 
     PNRJSON=pnr_simple_6502.json
     
