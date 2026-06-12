@@ -5,8 +5,10 @@ cd ghdl
 sudo make uninstall
 cd
 
+# Does not have uninstall so this halfling will have to do
+# todo could add more here...
 cd yosys
-sudo make uninstall
+sudo rm /usr/local/bin/yosys*
 cd
 
 

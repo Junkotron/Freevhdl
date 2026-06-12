@@ -5,7 +5,8 @@ cd ghdl
 sudo make install
 cd
 
-cd yosys
+cd yosys/build
+#sudo cmake --install build --strip
 sudo make install
 cd
 

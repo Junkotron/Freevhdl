@@ -6,6 +6,9 @@ sudo apt update
 # TODO: automate this
 sudo apt -y install mailutils
 
+NOW=`date`
+
+
 sudo DEBIAN_FRONTEND='noninteractive' apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade
 sudo DEBIAN_FRONTEND='noninteractive' apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' dist-upgrade
 
@@ -60,6 +63,16 @@ chmod a+rx $SALEAE
 
 cd
 tar xvf /home/fpga_demo.tar
+
+# this is very close to the end and installation
+# will run all the way here without questions
+# once the mailutils package at the top
+# has passed
+
+echo "Build started:"
+echo "$NOW"
+echo "Build finished: "
+date
 
 # If sudo times out it should suffice to re-run this
 /home/fpga_sudo_install.sh

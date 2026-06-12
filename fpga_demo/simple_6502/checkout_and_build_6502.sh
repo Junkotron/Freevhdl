@@ -33,8 +33,7 @@ popd
 
 cd Oric_MiSTer/rtl
 
-# noice :)
-#./mk_6502.sh ice40 all
+./mk_6502.sh ice40 all
 ./mk_6502.sh gowin all
 
 

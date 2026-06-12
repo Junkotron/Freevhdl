@@ -4,6 +4,9 @@ sudo apt update
 
 sudo apt -y install curl make g++ pkg-config zlib1g-dev emacs libreadline-dev
 
+# For ghdl on arm
+sudo apt install llvm-dev clang libzstd-dev zlib1g-dev
+
 sudo apt -y install gnat
 sudo apt-get -y install gawk git make python3 \
      lld bison clang libclang-cpp-dev flex libffi-dev \
