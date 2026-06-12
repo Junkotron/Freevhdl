@@ -5,14 +5,14 @@ sudo apt update
 sudo apt -y install curl make g++ pkg-config zlib1g-dev emacs libreadline-dev
 
 # For ghdl on arm
-sudo apt install llvm-dev clang libzstd-dev zlib1g-dev
+sudo apt -y install llvm-dev clang libzstd-dev zlib1g-dev
 
 sudo apt -y install gnat
 sudo apt-get -y install gawk git make python3 \
      lld bison clang libclang-cpp-dev flex libffi-dev \
      libfl-dev libreadline-dev pkg-config \
      tcl-dev zlib1g-dev graphviz xdot \
-     gtkwave minicom
+     gtkwave minicom iverilog
 
 sudo apt -y install \
      git \
