@@ -1,0 +1,21 @@
+
+IO_LOC  "hdmi_tx0_n" 36;    IO_PORT "hdmi_tx0_n" IO_TYPE=LVCMOS25 PULL_MODE=NONE DRIVE=8;
+IO_LOC  "hdmi_tx0_p" 35;    IO_PORT "hdmi_tx0_p" IO_TYPE=LVCMOS25 PULL_MODE=NONE DRIVE=8;
+
+IO_LOC  "hdmi_tx1_n" 38;    IO_PORT "hdmi_tx1_n" IO_TYPE=LVCMOS25 PULL_MODE=NONE DRIVE=8;
+IO_LOC  "hdmi_tx1_p" 37;    IO_PORT "hdmi_tx1_p" IO_TYPE=LVCMOS25 PULL_MODE=NONE DRIVE=8;
+
+IO_LOC  "hdmi_tx2_n" 40;    IO_PORT "hdmi_tx2_n" IO_TYPE=LVCMOS25 PULL_MODE=NONE DRIVE=8;
+IO_LOC  "hdmi_tx2_p" 39;    IO_PORT "hdmi_tx2_p" IO_TYPE=LVCMOS25 PULL_MODE=NONE DRIVE=8;
+
+IO_LOC  "hdmi_clk_n" 34;    IO_PORT "hdmi_clk_n" IO_TYPE=LVCMOS25 PULL_MODE=NONE DRIVE=8;
+IO_LOC  "hdmi_clk_p" 33;    IO_PORT "hdmi_clk_p" IO_TYPE=LVCMOS25 PULL_MODE=NONE DRIVE=8;
+
+// Button S1...
+IO_LOC  "reset_but1"     88;    IO_PORT "reset_but1"     IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+
+
+
+IO_LOC  "pclk_x5"        10;    IO_PORT "pclk_x5"        IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+IO_LOC  "scope"        15;
