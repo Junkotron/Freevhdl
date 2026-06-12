@@ -9,8 +9,9 @@ fi
 
 
 # copy up what we actually can use
-#cp FPGA-HDMI/RTL/*.v .
-#cp FPGA-HDMI/fpga_example/RTL/*.v .
+cp FPGA-HDMI/RTL/*.v .
+rm -f fpga_top.v
+cp FPGA-HDMI/fpga_example/RTL/*.v .
 
 FILES="hdmi_tddr.v hdmi_tx_top.v \
        hdmi_async_fifo.v hdmi_tmds_encode.v \
