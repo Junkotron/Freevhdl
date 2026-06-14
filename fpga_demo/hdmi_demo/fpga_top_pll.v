@@ -6,17 +6,9 @@
 // Function: example for hdmi_tx_top.v
 //--------------------------------------------------------------------------------------------------------
 
-// Lägg till detta i din Verilog-fil så att Yosys inte klagar
-(* blackbox *)
-module BUFG (
-    input I,
-    output O
-);
-endmodule
-
 module fpga_top (
-    input wire	reset_but1,	 // reset button goes high when pressed
-    input wire	pclk_x5, // 125 MHz
+    input wire	reset_but1, // reset button (todo)
+    input wire	clk27,	    // 27MHz
     output wire	hdmi_clk_p,
     output wire	hdmi_clk_n,
     output wire	hdmi_tx0_p,
@@ -29,58 +21,52 @@ module fpga_top (
 );
 
 
-   localparam RESP_LATENCY = 1;
-   wire	   clk;
-   
+localparam RESP_LATENCY = 1;
 
-   wire	   rstn;
-   wire	   resetn;
+wire       rstn;
+wire       pclk_x5;   // 125MHz
 
-   
-   wire	   ck_transfer;
-   
-   
-   wire	   req_en, req_sof, req_sol;         // request for pixel
-   wire [7:0] resp_red, resp_green, resp_blue;  // response pixel
-   
+wire       req_en, req_sof, req_sol;         // request for pixel
+wire [7:0] resp_red, resp_green, resp_blue;  // response pixel
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// use divider to go from 125 to 25
+// use PLL to generate pclk_x5 (125MHz)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-wire clkraw;
+   /*
+Gowin_PLLVR u_pll (
+    .clkout             ( pclk_x5             ),
+    .lock               ( rstn                ),
+    .reset              ( ~resetn             ),
+    .clkin              ( clk                 )
+);
+    */
+    
+// Make the quick clock for the hdmi clk signal
 
-BUFG my_clock_buffer (
-    .I(clkraw),
-    .O(clk)
+pll125 u_pll (
+    .clock_out             ( pclk_x5             ),
+    .locked                ( rstn                ),
+    .clock_in              ( clk27               )
 );
 
+pllpix p_pll (
+    .clock_out             ( pixclk             ),
+//    .locked                ( rstn                ),
+    .clock_in              ( clk27               )
+);
+
+
+// Make the pixel clock
+   
    
 divider1000 scopeclk (
 		   .clk(pclk_x5),
 		   .clk_out(scope)
 		   );
 
-
    
-   assign resetn = ~reset_but1;
-   assign rstn = ~reset_but1;
-
-clk_div_5 pixclk (
-		  .clk_in(pclk_x5),
-		  .rst_n(resetn),
-		  .clk_out(clkraw)
-		  );
-
-   
-//Gowin_PLLVR u_pll (
-//    .clkout             ( pclk_x5             ),
-//    .lock               ( rstn                ),
-//    .reset              ( ~resetn             ),
-//    .clkin              ( clk                 )
-//);
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////
 // generate green->purple scroll bars to test hdmi_tx_top
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +74,7 @@ clk_div_5 pixclk (
 pixel_generate # (
     .RESP_LATENCY       ( RESP_LATENCY        )
 ) u_pixel_generate (
-    .clk                ( clk                 ),
+    .clk                ( pixclk                 ),
     .req_en             ( req_en              ),
     .req_sof            ( req_sof             ),
     .req_sol            ( req_sol             ),
@@ -106,7 +92,7 @@ hdmi_tx_top #(
     .RESP_LATENCY       ( RESP_LATENCY        )
 ) u_hdmi_tx_top (
     .rstn               ( rstn                ),
-    .clk                ( clk                 ),
+    .clk                ( pixclk                 ),
     .req_en             ( req_en              ),
     .req_sof            ( req_sof             ),
     .req_eof            (                     ),
@@ -126,6 +112,6 @@ hdmi_tx_top #(
     .hdmi_tx2_n         ( hdmi_tx2_n          )
 );
 
-
+   
 endmodule
 

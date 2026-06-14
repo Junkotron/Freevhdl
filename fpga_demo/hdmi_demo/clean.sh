@@ -9,5 +9,7 @@ FILES="fpga_top.v hdmi_tddr.v hdmi_tx_top.v \
 mv $FILES "#*" svcd vcdextract *.vcd *~ old/
 mv "#*" svcd vcdextract *.vcd *~ old/
 
+mv *_gen.v old
+
 mv *.vcd work-obj*.cf mk_oric.sh *.rtlil *.json *~ *.bin *.asc *.fs old/
 
