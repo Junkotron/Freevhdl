@@ -29,7 +29,7 @@ for i in $DISKS; do
     ghdl -a $FLAGS rom/$i
 done
 
-ORIC="reset_logic.vhd divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd"
+ORIC="reset_logic.vhd divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd oricatmostop_sim.vhd"
 
 
 for i in $ORIC; do
@@ -43,11 +43,16 @@ fi
 
 do_yosys() {
 
-    
     yosys -p "read_verilog keyboard.sv; write_rtlil keyboard_$PLATTFORM.rtlil"
 
     if [ $PLATTFORM == "ice40" ]; then
 	yosys -p "read_verilog tristate.v; write_rtlil tristate_$PLATTFORM.rtlil"
+    fi
+
+    if [ $PLATTFORM == "sim" ]; then
+	yosys -p "read_verilog apple2_disk/floppy_track_dummy.sv; write_rtlil floppy_track_dummy_$PLATTFORM.rtlil"
+	yosys -p "read_verilog joystick.sv; write_rtlil joystick_$PLATTFORM.rtlil"
+	yosys -p "read_verilog psg.v; write_rtlil psg_sim.rtlil"
     fi
 
     yosys -m ghdl -p "ghdl $FLAGS oricatmostop_$PLATTFORM; write_rtlil oricatmostop_$PLATTFORM.rtlil"
@@ -58,7 +63,7 @@ do_yosys() {
 #    echo "tcl..."
 #    read
 
-    # Skip for now for gowin pin names does not work :(%
+    # Skip for now for gowin pin names does not work :(
     
     if [ $PLATTFORM == "ice40" ]; then
 	yosys < yo_$PLATTFORM.txt
@@ -73,12 +78,36 @@ do_yosys() {
     if [ $PLATTFORM == "ice40" ]; then
 	VLOG_PLATTFORM="tristate_ice40.rtlil"
     fi
+
     if [ $PLATTFORM == "gowin" ]; then
 	# TODO
 	VLOG_PLATTFORM=""
     fi
 
-    yosys -p "read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; synth_$PLATTFORM -json oricatmostop_$PLATTFORM.json"
+    if [ $PLATTFORM == "sim" ]; then
+	# TODO
+	VLOG_PLATTFORM="floppy_track_dummy_sim.rtlil psg_sim.rtlil joystick_sim.rtlil"
+    fi
+
+    if [ $PLATTFORM == "sim" ]; then
+
+#	yosys -p "read_rtlil write_rtlil oricatmostop_sim_verilog.rtlil"
+
+	yosys -p " \
+	      read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; \
+	      hierarchy -top oricatmostop_sim; \
+	      proc; \
+	      write_cxxrtl -noflatten -header oricatmos_sim.cpp \
+              "
+	clang++ -g -std=c++11 \
+		-I $(yosys-config --datdir)/include/backends/cxxrtl/runtime \
+		-I . \
+		oricatmos_sim.cpp sim_main_vhdl.cpp \
+		-o sim_oricatmos
+	
+    else
+	yosys -p "read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; synth_$PLATTFORM -json oricatmostop_$PLATTFORM.json"
+    fi
 
 }
 
@@ -90,6 +119,8 @@ fi
 if [ $MODE == "synth" ]; then
     exit 0
 fi
+
+
 
 if [ $PLATTFORM == "ice40" ]; then
     nextpnr-ice40 --hx8k --json oricatmostop_ice40.json --pcf oricatmos.pcf --asc oricatmos.asc --package ct256 --pcf-allow-unconstrained

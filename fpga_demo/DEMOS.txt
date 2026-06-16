@@ -19,12 +19,39 @@ Take one .vhd file from the "Oric_MiSTer" project and make it synth
 and pnr in yosys after some modifications.
 It will make target examples both for the ICE40 and Gowin platforms
 
-vga/ (runnable)
+vga/ (runnable ice40)
 
 Will output something most vga monitors will eat
 
-Oric/ (runnable)
+cxxrtl_test/ (simulation)
+Test of unified vhdl & verilog simulation at gate level
+
+cxxrtl_bb_test/ (simulation)
+Test of unified vhdl & verilog simulation at gate level
+using a black box for external modules non-synthesizeable
+
+
+hdmi_demo/ (runnable gowin)
+
+pattern generated on gowin 20k uses internal fpga pll's
+
+signaltrace/ (ice40 example)
+
+example for ice40 how to "steal" a signal inside the hierarchy and
+make it available on a physical leg without it being present on
+the top module.
+
+simple_6502/ (runnable ice40 & gowin)
+
+Create a 6502 a sinple rom and make it flash some leds via
+machine code
+
+tangblinkenlight/ (runnable ice40 & gowin)
+
+led flashing direct in verilog
+
+
+Oric/ (runnable but not working yet ice40/gowin)
 An attempt to synth the full "Oric_MiSTer" project, the checkout_and_build.sh
 will take the Oric files from another repo so it might not work in the future
-
 
