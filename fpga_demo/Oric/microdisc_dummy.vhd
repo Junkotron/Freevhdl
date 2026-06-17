@@ -84,5 +84,9 @@ END Microdisc;
 
 ARCHITECTURE Behavioral OF Microdisc IS
 BEGIN
-  
+  process (CLK_SYS)
+  begin
+    nHOSTRST <= nReset;
+  end process;
+    
 END Behavioral;

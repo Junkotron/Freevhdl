@@ -38,17 +38,18 @@
 --
 --
 
---  TODO back this without clk4 divider and
---  fork to ice40 and gowik resp.
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.all;
 ENTITY oricatmostop_sim IS
 	PORT (
-          CLK_TEST : out STD_LOGIC;
-		CLK_EXT : IN STD_LOGIC;
-		RESET_BUT1 : IN STD_LOGIC;
+		CLK_24MHz : IN STD_LOGIC; -- old mister clock
+                RESET : in std_logic;     -- magic reset from sim
+
+
+                -- below is a total mess right now
+                
 		key_pressed : IN STD_LOGIC;
 		key_extended : IN STD_LOGIC;
 		key_code : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -77,8 +78,7 @@ ENTITY oricatmostop_sim IS
                 ram_ad : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
 		ram_cs : OUT STD_LOGIC;
 		ram_oe : OUT STD_LOGIC;
-		ram_we : OUT STD_LOGIC;
-                ram_dq : inout STD_LOGIC_VECTOR(7 DOWNTO 0)
+		ram_we : OUT STD_LOGIC
 
                 --;
 
@@ -92,67 +92,19 @@ ARCHITECTURE RTL OF oricatmostop_sim IS
 signal ram_d : STD_LOGIC_VECTOR(7 DOWNTO 0);
 signal ram_q : STD_LOGIC_VECTOR(7 DOWNTO 0);
   
-signal RESET : std_logic;
 
-signal S_RESLOG : std_logic;
-  
 signal s_tape_byte_enable : STD_LOGIC;
 
 signal s_via_snap_t2c_data    : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
-signal CLK_25MHZ : STD_LOGIC;
-
-  -- TODO tristate impl via muxes for simulation
--- component tristate
---   port(
---     clk : in std_logic;
---     dir : in std_logic;
---     o : out std_logic_vector(7 downto 0);
---     i : in std_logic_vector(7 downto 0);
---     buff : inout std_logic_vector(7 downto 0)
---     );
--- end COMPONENT;
-
 BEGIN
-  CLK_TEST <= CLK_EXT;
 
-
-  reslog: entity work.startup_reset(rtl)
-    port map(
-      CLK_25MHz,
-      S_RESLOG
-    );
-          
-  RESET <= not S_RESLOG or not RESET_BUT1;
-  
-  s_tape_byte_enable <= '0';
-  s_via_snap_t2c_data <= (others => '0');
-
-  -- TODO tristate impl via muxes for simulation
-  
-  -- inst_tribuf : tristate
-  --   port MAP(
-  --     clk => CLK_25MHz,
-  --     dir => ram_oe,
-  --     o => ram_q,
-  --     i => ram_d,
-  --     buff => ram_dq
-  --     );
-
-  
-  divn_clk: entity work.clock_divider_n(Behavioral)
-    generic map (
-      N => 4
-    )
-    port map (
-      clk_in => CLK_EXT,
-      reset => '0',
-      clk_out => CLK_25MHZ
-    );
+ s_tape_byte_enable <= '0';
+ s_via_snap_t2c_data <= (others => '0');
 
   oric : entity work.oricatmos(RTL)
     port map (
-		CLK_IN => CLK_25MHZ,
+		CLK_IN => CLK_24MHZ,
 		RESET => RESET,
 		key_pressed => key_pressed,
 		key_extended => key_extended,
@@ -174,7 +126,9 @@ BEGIN
 		VIDEO_VSYNC => VIDEO_VSYNC,
 		VIDEO_SYNC => VIDEO_SYNC,
 		phi2 => phi2,
-		pll_locked => pll_locked,
+
+--		pll_locked => '1',
+		pll_locked => not RESET,
 
 
                 -- point to signals to avoid
@@ -239,6 +193,5 @@ BEGIN
 		ram_oe => ram_oe,
 		ram_we => ram_we
                 );
-    
 
 END RTL;

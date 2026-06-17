@@ -29,6 +29,7 @@ for i in $DISKS; do
     ghdl -a $FLAGS rom/$i
 done
 
+#ORIC="reset_logic.vhd oricatmostop_sim.vhd oricatmos.vhd divn.vhd",
 ORIC="reset_logic.vhd divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd oricatmostop_sim.vhd"
 
 
@@ -93,11 +94,12 @@ do_yosys() {
 
 #	yosys -p "read_rtlil write_rtlil oricatmostop_sim_verilog.rtlil"
 
+	      # write_cxxrtl -g4 -noflatten -header oricatmos_sim.cpp \
 	yosys -p " \
 	      read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; \
 	      hierarchy -top oricatmostop_sim; \
 	      proc; \
-	      write_cxxrtl -noflatten -header oricatmos_sim.cpp \
+	      write_cxxrtl -g4 -header oricatmos_sim.cpp \
               "
 	clang++ -g -std=c++11 \
 		-I $(yosys-config --datdir)/include/backends/cxxrtl/runtime \
