@@ -3,25 +3,29 @@ import vcdvcd
 INPUT_FILE = "waveforms.vcd"
 OUTPUT_FILE = "filtered.vcd"
 
-# Din lista (Stavat exakt som basnamnen i vcdvcd)
+# Din lista (Skriv bara basnamnen precis som i loggen, inga klamrar)
 signals_to_keep = [
     "CLK_24MHz",
+    "alow",
+    "ahigh",
+    "oric.alow",
+    "oric.ahigh",
     "oric.inst_cpu.clk",
     "oric.inst_cpu.do",     # 8 bitar
-    "oric.inst_cpu.a",      # Din RIKTIGA 24-bitars buss!
+    "oric.inst_cpu.di",     # 8 bitar
     "oric.inst_cpu.res_n",
     "oric.resetn"
 ]
 
-print(f"Fas 1: Skannar unika fullständiga buss-storlekar från {INPUT_FILE}...")
+print(f"Fas 1: Skannar råa bit-storlekar från {INPUT_FILE}...")
 
+# Skanna originalfilen rad för rad för att hitta de exakta bit-bredderna
 real_sizes = {}
 with open(INPUT_FILE, "r") as f:
     current_scope = []
     for line in f:
         line_strip = line.strip()
         
-        # Spåra hierarkin i råtexten för att bygga det exakta fulla namnet
         if line_strip.startswith("$scope"):
             parts = line_strip.split()
             if len(parts) >= 3:
@@ -33,19 +37,21 @@ with open(INPUT_FILE, "r") as f:
         elif line_strip.startswith("$var"):
             parts = line_strip.split()
             if len(parts) >= 5:
-                size_val = int(parts[2])     # T.ex. 24 eller 12
-                raw_name = parts[4]          # T.ex. 'a'
-                base_name = raw_name.split("[")[0]
+                size_val = int(parts[2]) 
+                raw_name = parts[4]      
+                base_name = raw_name.split("[")[0].strip()
                 
-                # Bygg det fulla namnet precis som det sparas i VCD
-                full_path = ".".join(current_scope) + "." + base_name
-                # Ta även bort ett eventuellt inledande "top." om scopes skiljer sig
-                clean_path = full_path.replace("top.", "")
+                # Bygg den fulla sökvägen
+                if current_scope:
+                    full_path = ".".join(current_scope) + "." + base_name
+                else:
+                    full_path = base_name # Om den ligger på absolut rot-nivå
                 
                 real_sizes[full_path] = size_val
-                real_sizes[clean_path] = size_val
+                # Spara även utan "top."-prefix som en säkerhetsåtgärd
+                real_sizes[full_path.replace("top.", "")] = size_val
                 
-        if "$enddefinitions" in line:
+        if "$enddefinitions" in line_strip:
             break
 
 # Kör vcdvcd för att parsa källfilens metadata och ID-koder
@@ -67,13 +73,21 @@ for name, old_id in meta_vcd.references_to_ids.items():
             old_id_to_new_ids[old_id] = []
         old_id_to_new_ids[old_id].append(new_id)
         
-        # FIX: Hämta storleken med det FULLSTÄNDIGA namnet (ingen mer krock mellan olika 'a')
+        # Hämta den sanna storleken
         bit_size = real_sizes.get(name, 1)
+        
+        # --- FIX FÖR TOPPNIVÅN ---
+        # Om namnet saknar punkt (t.ex. bara "a"), tvingar vi in den i "top"-scopet 
+        # så att trädgeneratorn inte kraschar eller skapar tomma mappar.
+        if "." not in name:
+            parts = ["top", name]
+        else:
+            parts = name.split(".")
             
         signals_metadata.append({
             "full_name": name,
             "new_id": new_id,
-            "parts": name.split("."),
+            "parts": parts,
             "size": bit_size
         })
         print(f"   -> Signal verifierad: {name} (ID: {new_id}, Storlek: {bit_size} bit)")
@@ -81,9 +95,10 @@ for name, old_id in meta_vcd.references_to_ids.items():
 print(f"Fas 2: Genererar {OUTPUT_FILE} till svcd...")
 
 with open(OUTPUT_FILE, "w") as out:
-    out.write("$date Generated with Unique Namespaces for svcd $end\n")
+    out.write("$comment Generated with Top-Level Vector Fix for svcd $end\n")
     out.write(f"$timescale {meta_vcd.timescale['timescale']} $end\n")
     
+    # Sortera trädet snyggt
     signals_metadata.sort(key=lambda x: len(x["parts"]))
     current_open_scopes = []
     
@@ -103,7 +118,7 @@ with open(OUTPUT_FILE, "w") as out:
             out.write(f"$scope module {next_scope} $end\n")
             current_open_scopes.append(next_scope)
             
-        # Skriv ut på rent klammerlöst format med den RIKTIGA unika storleken!
+        # Skriv ut på rent klammerlöst format med rätt storlek!
         out.write(f"$var wire {bit_size} {new_id} {signal_name} $end\n")
         
     while current_open_scopes:
@@ -132,5 +147,4 @@ with open(OUTPUT_FILE, "w") as out:
 
     vcdvcd.VCDVCD(INPUT_FILE, callbacks=FilterCallbacks(), store_tvs=False)
 
-print("Klart! Namnkrocken är borta och filen är redo för svcd.")
-
+print("Klart! Toppnivå-vektorer hanteras nu stabilt.")

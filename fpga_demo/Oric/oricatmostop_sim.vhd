@@ -47,6 +47,9 @@ ENTITY oricatmostop_sim IS
 		CLK_24MHz : IN STD_LOGIC; -- old mister clock
                 RESET : in std_logic;     -- magic reset from sim
 
+                -- useful when signal surfing on svcd
+                alow : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+                ahigh : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
 
                 -- below is a total mess right now
                 
@@ -73,7 +76,7 @@ ENTITY oricatmostop_sim IS
 		pll_locked : IN STD_LOGIC;
 
 
-                -- CPU bus for external RAM
+                -- CPU bus for external (and extended) RAM
                 -- d & q are handled via tristate buffer component
                 ram_ad : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
 		ram_cs : OUT STD_LOGIC;
@@ -91,7 +94,7 @@ ARCHITECTURE RTL OF oricatmostop_sim IS
 -- Connected via tristate/bidirectional buffer 
 signal ram_d : STD_LOGIC_VECTOR(7 DOWNTO 0);
 signal ram_q : STD_LOGIC_VECTOR(7 DOWNTO 0);
-  
+
 
 signal s_tape_byte_enable : STD_LOGIC;
 
@@ -99,14 +102,19 @@ signal s_via_snap_t2c_data    : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
 BEGIN
 
- s_tape_byte_enable <= '0';
- s_via_snap_t2c_data <= (others => '0');
+  alow  <= ram_ad(7 downto 0);
+  ahigh <= ram_ad(15 downto 8);
+  
+  s_via_snap_t2c_data <= (others => '0');
 
   oric : entity work.oricatmos(RTL)
     port map (
 		CLK_IN => CLK_24MHZ,
 		RESET => RESET,
-		key_pressed => key_pressed,
+
+                rom => "01", -- nice and shiny just out of the plastic oric 1.1 rom
+
+                key_pressed => key_pressed,
 		key_extended => key_extended,
 		key_code => key_code,
 		key_strobe => key_strobe,
@@ -166,7 +174,7 @@ BEGIN
 		joystick_adapter => (others => '0'),
 		joystick_0 => (others => '0'),
 		joystick_1 => (others => '0'),
-                rom => (others => '0'),
+
 		bios_din => (others => '0'),
 		img_mounted => (others => '0'),
 		img_wp => (others => '0'),

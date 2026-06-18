@@ -51,8 +51,9 @@ int main() {
 
   set_reset(true);
   top_design.step();
-  
-  for (int i=0;i<1000;i++)
+
+  // todo have this in real time calculated instead 1000 = about 40 us
+  for (int i=0;i<2000;i++)
     {
       if (i==20) set_reset(false);
       

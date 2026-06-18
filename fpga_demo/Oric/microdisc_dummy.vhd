@@ -82,11 +82,29 @@ ENTITY Microdisc IS
 	);
 END Microdisc;
 
-ARCHITECTURE Behavioral OF Microdisc IS
-BEGIN
-  process (CLK_SYS)
-  begin
-    nHOSTRST <= nReset;
-  end process;
+architecture rtl of Microdisc is
+begin
+
+    -- 1. Din fungerande reset-transfer
+    nHOSTRST <= nReset; -- Eller vad dina reset-pinnar heter hos nikiiv
+
+    -- 2. HÄV BLOCKADEN DIREKT PÅ UTGÅNGARNA:
+    -- Vi tvingar ut ettor på de aktiv-låga kontrollpinnarna!
     
-END Behavioral;
+    nROMDIS <= '1'; -- '1' = Stäng INTE av interna BASIC-ROM! (Häv blockaden)
+    nMAP    <= '1'; -- '1' = Slå INTE på någon extern minnesmappning!
+    
+    -- Om det finns en "ENA"-signal (Enable) som är en utgång eller ingång:
+    -- "ena" brukar i dessa sammanhang styra om databussen är aktiv.
+    -- Om det är en utgång, sätt den till '0' (avaktiverad diskettkontroller)
+    -- eller titta om den behövs för något annat.
+    -- ena    <= '0'; 
+
+    -- Se till att dummyns databuss ut (om den finns i portlistan) 
+    -- inte skickar ut skräp som krockar med ROM:et:
+    -- data_out <= (others => '0');
+
+end rtl;
+
+
+    
