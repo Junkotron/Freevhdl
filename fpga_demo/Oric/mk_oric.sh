@@ -30,7 +30,7 @@ for i in $DISKS; do
 done
 
 #ORIC="reset_logic.vhd oricatmostop_sim.vhd oricatmos.vhd divn.vhd",
-ORIC="reset_logic.vhd divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricatmos.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd oricatmostop_sim.vhd"
+ORIC="reset_logic.vhd divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricram.vhd oricatmos.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd oricatmostop_sim.vhd"
 
 
 for i in $ORIC; do

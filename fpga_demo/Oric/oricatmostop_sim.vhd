@@ -42,7 +42,7 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.all;
-ENTITY oricatmostop_sim IS
+ENTITY oricatmostop_gowin IS
 	PORT (
 		CLK_24MHz : IN STD_LOGIC; -- old mister clock
                 RESET : in std_logic;     -- magic reset from sim
@@ -88,7 +88,7 @@ ENTITY oricatmostop_sim IS
                 );
 END;
 
-ARCHITECTURE RTL OF oricatmostop_sim IS
+ARCHITECTURE RTL OF oricatmostop_gowin IS
 
 
 -- Connected via tristate/bidirectional buffer 
@@ -201,5 +201,15 @@ BEGIN
 		ram_oe => ram_oe,
 		ram_we => ram_we
                 );
+  
 
+  inst_oricram: entity work.bram_48k(rtl)
+    port map(
+      clk  => clk_24MHz,     -- Din 24 MHz masterklocka
+      we   => ram_we,
+      addr => ram_ad,
+      di   => ram_d,    -- Data från CPU:ns DO-pinne
+      do   => ram_q -- Data ut till multiplexern
+      );
+  
 END RTL;

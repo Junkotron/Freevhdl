@@ -38,16 +38,21 @@
 --
 --
 
---  TODO back this without clk4 divider and
---  fork to ice40 and gowik resp.
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.all;
-ENTITY oricatmostop_gowin IS
+ENTITY oricatmostop_sim IS
 	PORT (
-		CLK_IN : IN STD_LOGIC;
-		RESET : IN STD_LOGIC;
+		CLK_24MHz : IN STD_LOGIC; -- old mister clock
+                RESET : in std_logic;     -- magic reset from sim
+
+                -- useful when signal surfing on svcd
+                alow : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+                ahigh : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+
+                -- below is a total mess right now
+                
 		key_pressed : IN STD_LOGIC;
 		key_extended : IN STD_LOGIC;
 		key_code : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -62,48 +67,54 @@ ENTITY oricatmostop_gowin IS
 		VIDEO_R : OUT STD_LOGIC;
 		VIDEO_G : OUT STD_LOGIC;
 		VIDEO_B : OUT STD_LOGIC;
-		VIDEO_HBLANK : OUT STD_LOGIC;
-		VIDEO_VBLANK : OUT STD_LOGIC;
+--		VIDEO_HBLANK : OUT STD_LOGIC;
+--		VIDEO_VBLANK : OUT STD_LOGIC;
 		VIDEO_HSYNC : OUT STD_LOGIC;
 		VIDEO_VSYNC : OUT STD_LOGIC;
 		VIDEO_SYNC : OUT STD_LOGIC;
 		phi2 : OUT STD_LOGIC;
-		pll_locked : IN STD_LOGIC
+		pll_locked : IN STD_LOGIC;
+
+
+                -- CPU bus for external (and extended) RAM
+                -- d & q are handled via tristate buffer component
+                ram_ad : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+		ram_cs : OUT STD_LOGIC;
+		ram_oe : OUT STD_LOGIC;
+		ram_we : OUT STD_LOGIC
+
+                --;
 
                 );
 END;
 
-ARCHITECTURE RTL OF oricatmostop_gowin IS
+ARCHITECTURE RTL OF oricatmostop_sim IS
+
+
+-- Connected via tristate/bidirectional buffer 
+signal ram_d : STD_LOGIC_VECTOR(7 DOWNTO 0);
+signal ram_q : STD_LOGIC_VECTOR(7 DOWNTO 0);
+
 
 signal s_tape_byte_enable : STD_LOGIC;
 
 signal s_via_snap_t2c_data    : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
-signal CLK_25MHZ : STD_LOGIC;
-
-
 BEGIN
 
-  s_tape_byte_enable <= '0';
+  alow  <= ram_ad(7 downto 0);
+  ahigh <= ram_ad(15 downto 8);
+  
   s_via_snap_t2c_data <= (others => '0');
 
-  divn_clk: entity work.clock_divider_n(Behavioral)
-    generic map (
-      N => 4
-    )
-    port map (
-      clk_in => CLK_IN,
-      reset => '0',
-      clk_out => CLK_25MHZ
-    );
-
-  -- CLK_25MHZ <= CLK_IN;
-  
   oric : entity work.oricatmos(RTL)
     port map (
-		CLK_IN => CLK_25MHZ,
+		CLK_IN => CLK_24MHZ,
 		RESET => RESET,
-		key_pressed => key_pressed,
+
+                rom => "01", -- nice and shiny just out of the plastic oric 1.1 rom
+
+                key_pressed => key_pressed,
 		key_extended => key_extended,
 		key_code => key_code,
 		key_strobe => key_strobe,
@@ -117,13 +128,15 @@ BEGIN
 		VIDEO_R => VIDEO_R,
 		VIDEO_G => VIDEO_G,
 		VIDEO_B => VIDEO_B,
-		VIDEO_HBLANK => VIDEO_HBLANK,
-		VIDEO_VBLANK => VIDEO_VBLANK,
+--		VIDEO_HBLANK => VIDEO_HBLANK,
+--		VIDEO_VBLANK => VIDEO_VBLANK,
 		VIDEO_HSYNC => VIDEO_HSYNC,
 		VIDEO_VSYNC => VIDEO_VSYNC,
 		VIDEO_SYNC => VIDEO_SYNC,
 		phi2 => phi2,
-		pll_locked => pll_locked,
+
+--		pll_locked => '1',
+		pll_locked => not RESET,
 
 
                 -- point to signals to avoid
@@ -161,7 +174,7 @@ BEGIN
 		joystick_adapter => (others => '0'),
 		joystick_0 => (others => '0'),
 		joystick_1 => (others => '0'),
-                rom => (others => '0'),
+
 		bios_din => (others => '0'),
 		img_mounted => (others => '0'),
 		img_wp => (others => '0'),
@@ -179,8 +192,24 @@ BEGIN
 		ay_snap_creg    => (others => '0'),
 		ula_snap_mode   => (others => '0'),
 		patch_data      => (others => '0'),
-                ram_q => (others => '0')
-                );
-    
 
+                
+                ram_ad => ram_ad,
+		ram_d  => ram_d,
+		ram_q  => ram_q,
+		ram_cs => ram_cs,
+		ram_oe => ram_oe,
+		ram_we => ram_we
+                );
+  
+
+  inst_oricram: entity work.bram_48k(rtl)
+    port map(
+      clk  => clk_24MHz,     -- Din 24 MHz masterklocka
+      we   => ram_we,
+      addr => ram_ad,
+      di   => ram_d,    -- Data från CPU:ns DO-pinne
+      do   => ram_q -- Data ut till multiplexern
+      );
+  
 END RTL;
