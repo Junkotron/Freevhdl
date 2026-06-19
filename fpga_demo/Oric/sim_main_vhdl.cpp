@@ -9,6 +9,24 @@ int time_steps=0;
 
 cxxrtl_design::p_oricatmostop__sim top_design;
 
+void init_ram()
+{
+  // Hitta CXXRTL:s interna minnesobjekt. 
+  // Sök i din 'oricatmos_sim.cpp' efter "_oricram_2e_ram" om namnet klagar!
+  auto &bram = top_design.memory_p_inst__oricram_2e_ram;
+  
+  // Fyll minnet manuellt bit för bit i C++
+  for (size_t i = 0; i < bram.depth; ++i) {
+    if (i % 2 == 0) {
+      bram[i].set<uint32_t>(0x55); // Schackruta ljust (01010101)
+    } else {
+      bram[i].set<uint32_t>(0xAA); // Schackruta mörkt (10101010)
+    }
+  }
+  printf("[CXXRTL] RAM tvingat till testmönster (%zu bytes) via C++!\n", bram.depth);
+  
+}
+
 void set_master_clock(bool val)
 {
   // Drive top-level inputs (Verify underscore quantity in gen_design.h)
@@ -25,6 +43,8 @@ void set_reset(bool val)
 
 int main() {
 
+  init_ram();
+  
   // Öppna en filström för att spara vcd-filen
   std::ofstream vcd_file("waveforms.vcd");
 

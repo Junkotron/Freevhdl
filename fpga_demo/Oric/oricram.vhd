@@ -3,6 +3,13 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity bram_48k is
+    generic (
+        -- Sätt till true i din testbench/simulator för att ladda schackrutan
+        -- brasklapp: detta funkar på dom flesta moderna syntesverktyg men
+        -- kan få för sig att sluka gindar i vissa system
+        -- I cxxrtl måste man komplettera med en init metod i cpp-koden
+        SIM_TEST_PATTERN : boolean := false 
+    );
     port (
         clk  : in  std_logic;
         we   : in  std_logic;                    -- Write Enable (Aktiv hög)
@@ -15,11 +22,33 @@ end bram_48k;
 architecture rtl of bram_48k is
     -- 48 kB RAM motsvarar index 0 till 49151
     type ram_type is array (0 to 49151) of std_logic_vector(7 downto 0);
-    signal ram : ram_type := (others => (others => '0'));
+
+    -- Intern funktion som väljer mellan nollställt RAM eller schackrutat mönster
+    function init_ram_data(enable_pattern : boolean) return ram_type is
+        variable temp_ram : ram_type;
+    begin
+        for i in 0 to 49151 loop
+            if enable_pattern then
+                -- Skapar ett mönster: 0x55 (01010101) på jämna adresser, 0xAA (10101010) på udda
+                if (i mod 2 = 0) then
+                    temp_ram(i) := x"55";
+                else
+                    temp_ram(i) := x"AA";
+                end if;
+            else
+                -- Standard för hårdvara: Fyll med nollor
+                temp_ram(i) := x"00";
+            end if;
+        end loop;
+        return temp_ram;
+    end function;
+
+    -- Initiera minnet dynamiskt baserat på vår generic
+    signal ram : ram_type := init_ram_data(SIM_TEST_PATTERN);
+
 begin
     process(clk)
         variable addr_int     : integer;
-        -- Denna variabel garanterar för CXXRTL att indexet ALDRIG kan bli för stort
         variable addr_clamped : integer range 0 to 49151; 
     begin
         if rising_edge(clk) then
@@ -31,7 +60,7 @@ begin
                 if addr_int <= 49151 then
                     addr_clamped := addr_int;
                 else
-                    addr_clamped := 0; -- Säkert standardvärde om adressen är utanför 48 kB
+                    addr_clamped := 0; 
                 end if;
                 
                 -- Utför skrivning (endast om adressen är giltig och we är aktiv)
@@ -39,14 +68,13 @@ begin
                     ram(addr_clamped) <= di;
                 end if;
                 
-                -- Synkron läsning (nu helt immun mot CXXRTL out-of-bounds)
+                -- Synkron läsning (helt immun mot CXXRTL out-of-bounds)
                 if addr_int <= 49151 then
                     do <= ram(addr_clamped);
                 else
-                    do <= (others => '0'); -- Returnera nollor för det övre området (t.ex. ROM-area)
+                    do <= (others => '0'); 
                 end if;
             else
-                -- Om adressbussen är odefinierad vid start, sätt utgången till noll
                 do <= (others => '0');
             end if;
         end if;

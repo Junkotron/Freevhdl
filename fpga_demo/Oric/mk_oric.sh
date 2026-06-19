@@ -58,22 +58,12 @@ do_yosys() {
 
     yosys -m ghdl -p "ghdl $FLAGS oricatmostop_$PLATTFORM; write_rtlil oricatmostop_$PLATTFORM.rtlil"
 
-    # This is kind of useful to check that our desired signal is in the
-    # portlist
-    
-#    echo "tcl..."
-#    read
-
-    # Skip for now for gowin pin names does not work :(
     
     if [ $PLATTFORM == "ice40" ]; then
 	yosys < yo_$PLATTFORM.txt
     else
 	cp oricatmostop_$PLATTFORM.rtlil modified_$PLATTFORM.rtlil
     fi
-
-#    echo "tcl done"
-#    read
     
     VLOG_COMMON="modified_$PLATTFORM.rtlil keyboard_$PLATTFORM.rtlil"
     if [ $PLATTFORM == "ice40" ]; then
@@ -92,9 +82,6 @@ do_yosys() {
 
     if [ $PLATTFORM == "sim" ]; then
 
-#	yosys -p "read_rtlil write_rtlil oricatmostop_sim_verilog.rtlil"
-
-	      # write_cxxrtl -g4 -noflatten -header oricatmos_sim.cpp \
 	yosys -p " \
 	      read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; \
 	      hierarchy -top oricatmostop_sim; \
@@ -133,17 +120,17 @@ fi
 
 if [ $PLATTFORM == "gowin" ]; then
 
-    DEVICE="GW2A-LV18PG256C7/I6"
+    DEVICE="GW2AR-LV18QN88C8/I7"
     
     BOARD=oricatmos
     
     PNRJSON=pnr_oricatmos.json
-    
+
     nextpnr-himbaechel --json oricatmostop_gowin.json \
                        --write $PNRJSON \
                        --device $DEVICE \
                        --vopt cst=$BOARD.cst \
-		       --vopt family=GW2A-18
+		       --vopt family=GW2A-18C
 
 
     gowin_pack -d $DEVICE -o oricatmos.fs $PNRJSON 

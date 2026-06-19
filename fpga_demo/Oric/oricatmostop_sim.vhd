@@ -42,68 +42,50 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.all;
-ENTITY oricatmostop_gowin IS
+ENTITY oricatmostop_sim IS
 	PORT (
-		CLK_24MHz : IN STD_LOGIC; -- old mister clock
+                atest : out std_logic; -- it is usuful in the real world wo we
+                                       -- just let it tagalong here
+            
+                CLK_24MHz : IN STD_LOGIC; -- old mister clock
                 RESET : in std_logic;     -- magic reset from sim
-
-                -- useful when signal surfing on svcd
-                alow : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
-                ahigh : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
-
-                -- below is a total mess right now
-                
-		key_pressed : IN STD_LOGIC;
-		key_extended : IN STD_LOGIC;
-		key_code : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-		key_strobe : IN STD_LOGIC;
-		pravetz_layout : IN STD_LOGIC := '0';
-		K7_TAPEIN : IN STD_LOGIC;
-		K7_TAPEOUT : OUT STD_LOGIC;
-		K7_REMOTE : OUT STD_LOGIC;
-
 
 		VIDEO_CLK : OUT STD_LOGIC;
 		VIDEO_R : OUT STD_LOGIC;
 		VIDEO_G : OUT STD_LOGIC;
 		VIDEO_B : OUT STD_LOGIC;
---		VIDEO_HBLANK : OUT STD_LOGIC;
---		VIDEO_VBLANK : OUT STD_LOGIC;
 		VIDEO_HSYNC : OUT STD_LOGIC;
-		VIDEO_VSYNC : OUT STD_LOGIC;
-		VIDEO_SYNC : OUT STD_LOGIC;
-		phi2 : OUT STD_LOGIC;
-		pll_locked : IN STD_LOGIC;
+		VIDEO_VSYNC : OUT STD_LOGIC
 
-
-                -- CPU bus for external (and extended) RAM
-                -- d & q are handled via tristate buffer component
-                ram_ad : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
-		ram_cs : OUT STD_LOGIC;
-		ram_oe : OUT STD_LOGIC;
-		ram_we : OUT STD_LOGIC
-
-                --;
+                -- ;
+--		phi2 : OUT STD_LOGIC;
+--		pll_locked : IN STD_LOGIC
+                -- ;
 
                 );
 END;
 
-ARCHITECTURE RTL OF oricatmostop_gowin IS
+ARCHITECTURE RTL OF oricatmostop_sim IS
+
+  
+  -- CPU bus for external (and extended) RAM
+  -- d & q are handled via tristate buffer component
+  signal s_ram_ad : STD_LOGIC_VECTOR(15 DOWNTO 0);
+  signal s_ram_cs : STD_LOGIC;
+  signal s_ram_oe : STD_LOGIC;
+  signal s_ram_we : STD_LOGIC;
+
+  signal s_ram_d : STD_LOGIC_VECTOR(7 DOWNTO 0);
+  signal s_ram_q : STD_LOGIC_VECTOR(7 DOWNTO 0);
 
 
--- Connected via tristate/bidirectional buffer 
-signal ram_d : STD_LOGIC_VECTOR(7 DOWNTO 0);
-signal ram_q : STD_LOGIC_VECTOR(7 DOWNTO 0);
+  signal s_tape_byte_enable : STD_LOGIC;
 
-
-signal s_tape_byte_enable : STD_LOGIC;
-
-signal s_via_snap_t2c_data    : STD_LOGIC_VECTOR(15 DOWNTO 0);
+  signal s_via_snap_t2c_data    : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
 BEGIN
 
-  alow  <= ram_ad(7 downto 0);
-  ahigh <= ram_ad(15 downto 8);
+  atest <= VIDEO_R;
   
   s_via_snap_t2c_data <= (others => '0');
 
@@ -114,36 +96,22 @@ BEGIN
 
                 rom => "01", -- nice and shiny just out of the plastic oric 1.1 rom
 
-                key_pressed => key_pressed,
-		key_extended => key_extended,
-		key_code => key_code,
-		key_strobe => key_strobe,
-		pravetz_layout => pravetz_layout,
-		K7_TAPEIN => K7_TAPEIN,
-		K7_TAPEOUT => K7_TAPEOUT,
-		K7_REMOTE => K7_REMOTE,
-
+                key_pressed => '0',
+		key_extended => '0',
+		key_code => "00000000",
+		key_strobe => '0',
+		pravetz_layout => '0',
+		K7_TAPEIN => '0',
 
 		VIDEO_CLK => VIDEO_CLK,
 		VIDEO_R => VIDEO_R,
 		VIDEO_G => VIDEO_G,
 		VIDEO_B => VIDEO_B,
---		VIDEO_HBLANK => VIDEO_HBLANK,
---		VIDEO_VBLANK => VIDEO_VBLANK,
 		VIDEO_HSYNC => VIDEO_HSYNC,
 		VIDEO_VSYNC => VIDEO_VSYNC,
-		VIDEO_SYNC => VIDEO_SYNC,
-		phi2 => phi2,
 
---		pll_locked => '1',
 		pll_locked => not RESET,
 
-
-                -- point to signals to avoid
-                -- rogue pin errors in pnr now
---                tape_byte_enable => tape_byte_enable,
-
-                
                 -- Hard coded for now
 
                 -- scalars here
@@ -194,22 +162,28 @@ BEGIN
 		patch_data      => (others => '0'),
 
                 
-                ram_ad => ram_ad,
-		ram_d  => ram_d,
-		ram_q  => ram_q,
-		ram_cs => ram_cs,
-		ram_oe => ram_oe,
-		ram_we => ram_we
+                ram_ad => s_ram_ad,
+		ram_d  => s_ram_d,
+		ram_q  => s_ram_q,
+		ram_we => s_ram_we,
+
+                -- not actually used for bram
+		ram_cs => s_ram_cs,
+		ram_oe => s_ram_oe
+
                 );
   
 
   inst_oricram: entity work.bram_48k(rtl)
-    port map(
+    generic map (
+      SIM_TEST_PATTERN => true
+      )
+    port map (
       clk  => clk_24MHz,     -- Din 24 MHz masterklocka
-      we   => ram_we,
-      addr => ram_ad,
-      di   => ram_d,    -- Data från CPU:ns DO-pinne
-      do   => ram_q -- Data ut till multiplexern
+      we   => s_ram_we,
+      addr => s_ram_ad,
+      di   => s_ram_d,    -- Data från CPU:ns DO-pinne
+      do   => s_ram_q -- Data ut till multiplexern
       );
   
 END RTL;

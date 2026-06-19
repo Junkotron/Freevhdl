@@ -1,5 +1,24 @@
 #!/bin/bash
 
+if [ $# -eq 0 ]; then
+    echo "ok builds all for all ..."
+    PLATF="all"
+    JOB="all"
+else if [ "$2" == "" ]; then
+	 echo "Usage:"
+	 echo "./$0"
+	 echo "  or"
+	 echo "./$0 [target] [job]"
+	 exit 0
+     else 
+	 PLATF=$1
+	 JOB=$2
+     fi
+fi
+
+echo "Doing job: $JOB for $PLATF"
+
+
 if [ -e Oric_MiSTer ]; then
    echo "Oric already checked out.."
 else
@@ -35,23 +54,21 @@ pushd Oric_MiSTer/rtl
 chmod a-w $FILE_LIST
 popd
 
+gcc -o svcd svcd.c
 
 pushd Oric_MiSTer/rtl
 
+if [ "$PLATF" == "all" ]; then
 ./mk_oric.sh sim all
+./mk_oric.sh ice40 all
+./mk_oric.sh gowin all
+else if [ $JOB == "all" ]; then
+	 ./mk_oric.sh $PLATF all
+     else
+	 ./mk_oric.sh $PLATF $JOB
+     fi
+fi
+
+
 
 popd
-
-gcc -o svcd svcd.c
-
-
-cd Oric_MiSTer/rtl
-
-#./mk_oric.sh ice40 all
-
-echo "Enter (for now) to build gowin"
-read
-
-./mk_oric.sh gowin all
-
-
