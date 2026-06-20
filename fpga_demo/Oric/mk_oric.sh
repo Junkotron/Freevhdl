@@ -41,6 +41,38 @@ if [ $MODE == "ghdl" ]; then
     exit 0
 fi
 
+do_clang() {
+	clang++ -O3 -std=c++11 \
+		-I $(yosys-config --datdir)/include/backends/cxxrtl/runtime \
+		-I . \
+		oricatmos_sim.cpp sim_main_vhdl.cpp frame_grab.cpp \
+		-o sim_oricatmos
+}
+
+do_clang_snabb() {
+	clang++ -c -O3 -std=c++11 \
+		-I $(yosys-config --datdir)/include/backends/cxxrtl/runtime \
+		-I . \
+		sim_main_vhdl.cpp 
+}
+
+if [ $PLATTFORM == "sim" ]; then
+
+    if [ $MODE == "clang" ]; then
+	
+	# Just recompile c...
+	do_clang
+
+	# this is just for when fighting with getting
+	# sim_main_vhdl.cpp to compile with quick turn-arounds
+	# todo: actual makefile...
+	#do_clang_snabb 
+	exit 0
+	
+    fi
+    
+fi
+
 
 do_yosys() {
 
@@ -86,13 +118,9 @@ do_yosys() {
 	      read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; \
 	      hierarchy -top oricatmostop_sim; \
 	      proc; \
-	      write_cxxrtl -g4 -header oricatmos_sim.cpp \
+	      write_cxxrtl -noflatten -g4 -header oricatmos_sim.cpp \
               "
-	clang++ -g -std=c++11 \
-		-I $(yosys-config --datdir)/include/backends/cxxrtl/runtime \
-		-I . \
-		oricatmos_sim.cpp sim_main_vhdl.cpp \
-		-o sim_oricatmos
+	do_clang
 	
     else
 	yosys -p "read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; synth_$PLATTFORM -json oricatmostop_$PLATTFORM.json"
@@ -132,6 +160,6 @@ if [ $PLATTFORM == "gowin" ]; then
                        --vopt cst=$BOARD.cst \
 		       --vopt family=GW2A-18C
 
-
     gowin_pack -d $DEVICE -o oricatmos.fs $PNRJSON 
 fi
+

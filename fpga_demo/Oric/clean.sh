@@ -2,20 +2,25 @@
 
 mkdir -p old 
 
-mv "#*" svcd vcdextract *.vcd *~ old/
+mv *.png *.jpg *.ppm "#*" svcd vcdextract *.vcd *~ old/
 
+if [ -e Oric_MiSTer ]; then
 
-pushd Oric_MiSTer/rtl
+    echo "cleaning the mister dir..."
+    
+    pushd Oric_MiSTer/rtl
+    
+    chmod u+w *
+    
+    mkdir -p old 
+    
+    chmod u+w old/*
+    
+    
+    mv sim_oricatmos *.o *.cpp *.h *.vcd work-obj*.cf mk_oric.sh *.rtlil *.json *~ *.bin *.asc *.fs old/
 
-chmod u+w *
+    popd
 
-mkdir -p old 
-
-chmod u+w old/*
-
-
-mv sim_oricatmos *.cpp *.h *.vcd work-obj*.cf mk_oric.sh *.rtlil *.json *~ *.bin *.asc *.fs old/
-
-popd
+fi
 
 

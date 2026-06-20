@@ -8,8 +8,15 @@ signals_to_keep = [
     "CLK_24MHz",
     "alow",
     "ahigh",
-    "oric.alow",
-    "oric.ahigh",
+    "VIDEO_VSYNC",
+    "VIDEO_HSYNC",
+    "oric.inst_ula.do",
+    "oric.cpu_ad",
+    "oric.cpu_di",
+    "oric.cpu_do",
+    "oric.ram_we",
+    "oric.cpu_sync",
+    "oric.inst_cpu.addr",
     "oric.inst_cpu.clk",
     "oric.inst_cpu.do",     # 8 bitar
     "oric.inst_cpu.di",     # 8 bitar
