@@ -67,6 +67,6 @@ def print_collapsed_vcd_hierarchy(vcd_path):
 
 if __name__ == "__main__":
     # Kör direkt mot din fil
-    print_collapsed_vcd_hierarchy("filtered.vcd")
+    print_collapsed_vcd_hierarchy("waveforms.vcd")
 
 

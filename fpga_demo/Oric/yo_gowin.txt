@@ -1,7 +1,7 @@
 
 
 read_rtlil oricatmostop_gowin.rtlil
-hierarchy -top oricatmostop_gowin
+hierarchy -top oricatmostop
 flatten
 proc
 
@@ -11,9 +11,9 @@ proc
 
 
 
-setattr -set keep 1 \oricatmostop_gowin/w:oric.inst_cpu.clk
+setattr -set keep 1 \oricatmostop/w:oric.inst_cpu.clk
 
-expose \oricatmostop_gowin/w:oric.inst_cpu.clk
+expose \oricatmostop/w:oric.inst_cpu.clk
 
 portlist
 

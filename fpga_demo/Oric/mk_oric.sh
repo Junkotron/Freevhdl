@@ -29,13 +29,16 @@ for i in $DISKS; do
     ghdl -a $FLAGS rom/$i
 done
 
-#ORIC="reset_logic.vhd oricatmostop_sim.vhd oricatmos.vhd divn.vhd",
-ORIC="reset_logic.vhd divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricram.vhd oricatmos.vhd oricatmostop_ice40.vhd oricatmostop_gowin.vhd oricatmostop_sim.vhd"
-
+ORIC="reset_logic.vhd divn.vhd m6522.vhd ula.vhd pravetz8d_fdc.vhd microdisc_dummy.vhd oricram.vhd oricatmos.vhd oricatmostop.vhd"
 
 for i in $ORIC; do
+#    FLIPS="-gENABLE_VIA=true -gENABLE_DISK=true -gENABLE_HID=true -gENABLE_ROM=true -gENABLE_ULA=false -gENABLE_CPU=true"
+#    FLIPS="-gENABLE_VIA=false -gENABLE_DISK=false -gENABLE_HID=false -gENABLE_ROM=false -gENABLE_ULA=false -gENABLE_CPU=true"
+
+#    ghdl -a -fexplicit -fsynopsys $FLAGS $FLIPS $i
     ghdl -a -fexplicit -fsynopsys $FLAGS $i
 done
+
 
 if [ $MODE == "ghdl" ]; then
     exit 0
@@ -74,6 +77,16 @@ if [ $PLATTFORM == "sim" ]; then
 fi
 
 
+if [ $MODE == "rom" ]; then
+    
+64tass oric_test.asm -b -o oric_test.rom
+python3 mk_rom.py
+mkdir -p rom
+cp BASIC10.vhd rom/
+    
+fi
+
+
 do_yosys() {
 
     yosys -p "read_verilog keyboard.sv; write_rtlil keyboard_$PLATTFORM.rtlil"
@@ -85,10 +98,12 @@ do_yosys() {
     if [ $PLATTFORM == "sim" ]; then
 	yosys -p "read_verilog apple2_disk/floppy_track_dummy.sv; write_rtlil floppy_track_dummy_$PLATTFORM.rtlil"
 	yosys -p "read_verilog joystick.sv; write_rtlil joystick_$PLATTFORM.rtlil"
+
+	
 	yosys -p "read_verilog psg.v; write_rtlil psg_sim.rtlil"
     fi
 
-    yosys -m ghdl -p "ghdl $FLAGS oricatmostop_$PLATTFORM; write_rtlil oricatmostop_$PLATTFORM.rtlil"
+    yosys -m ghdl -p "ghdl $FLAGS $FLIPS oricatmostop; write_rtlil oricatmostop_$PLATTFORM.rtlil"
 
     
     if [ $PLATTFORM == "ice40" ]; then
@@ -98,6 +113,7 @@ do_yosys() {
     fi
     
     VLOG_COMMON="modified_$PLATTFORM.rtlil keyboard_$PLATTFORM.rtlil"
+
     if [ $PLATTFORM == "ice40" ]; then
 	VLOG_PLATTFORM="tristate_ice40.rtlil"
     fi
@@ -108,18 +124,49 @@ do_yosys() {
     fi
 
     if [ $PLATTFORM == "sim" ]; then
-	# TODO
 	VLOG_PLATTFORM="floppy_track_dummy_sim.rtlil psg_sim.rtlil joystick_sim.rtlil"
     fi
 
     if [ $PLATTFORM == "sim" ]; then
 
+	## OBS DENNA "GÖR" INGET ##
+##	echo "issuing command: 	yosys -p \" \
+##	      read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; \
+##	      hierarchy -top oricatmostop; \
+##	      proc; \
+##	      write_cxxrtl -noflatten -g4 -header oricatmos_sim.cpp \
+##	      \""
+
+
+
 	yosys -p " \
 	      read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; \
-	      hierarchy -top oricatmostop_sim; \
+	      hierarchy -top oricatmostop; \
 	      proc; \
 	      write_cxxrtl -noflatten -g4 -header oricatmos_sim.cpp \
-              "
+             "
+
+#	yosys -p " \
+#	      read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; \
+#	      hierarchy -top \\t65_Brtl; \
+#	      proc; \
+#	      write_cxxrtl -noflatten -g4 -header ../../cpu_ula_sim.cc \
+#              "
+
+#	yosys -p " \
+#	      read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; \
+#	      hierarchy -top oricatmostop; \
+#	      proc; \
+#	      write_cxxrtl -noflatten -g4 -header oricatmos_sim.cpp \
+#             "
+
+#	yosys -p " \
+#	      read_rtlil $VLOG_COMMON $VLOG_PLATTFORM; \
+#              hierarchy -top \\oricatmos_Brtl; \
+#	      proc; \
+#	      write_cxxrtl -noflatten -g4 -header ../../cpu_ula_sim.cc \
+#             "
+
 	do_clang
 	
     else

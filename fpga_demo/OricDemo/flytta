@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Kontrollera att användaren skickade med en fil
+if [ -z "$1" ]; then
+    echo "Användning: $0 <filnamn>"
+    exit 1
+fi
+
+# Kontrollera att filen existerar
+if [ ! -f "$1" ]; then
+    echo "Fel: Filen '$1' hittades inte."
+    exit 1
+fi
+
+# 1. Ladda upp filen till paste.rs
+# 2. Rensa eventuella radbrytningar
+# 3. Koda URL:en till Base64 och skicka via OSC 52 till ditt urklipp
+curl -s --data-binary @"$1" https://paste.rs | tr -d '\n\r' | { 
+    read -r url
+    if [ -n "$url" ]; then
+        encoded=$(printf "%s" "$url" | base64 | tr -d '\n\r')
+        printf "\033]52;c;%s\007" "$encoded"
+        echo "✓ Filen uppladdad! URL kopierad till urklipp: $url"
+    else
+        echo "Fel: Kunde inte ladda upp till paste.rs"
+    fi
+}

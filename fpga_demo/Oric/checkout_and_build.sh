@@ -26,9 +26,9 @@ else
     git clone https://github.com/nikiiv/Oric_MiSTer.git
 fi
 
-VHDL_FILE_LIST="reset_logic.vhd microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd apple2_disk/floppy_track_dummy.sv oricatmostop_ice40.vhd oricatmostop_gowin.vhd oricatmostop_sim.vhd divn.vhd oricram.vhd"
+VHDL_FILE_LIST="reset_logic.vhd microdisc_dummy.vhd apple2_disk/dpram_dummy.vhd apple2_disk/floppy_track_dummy.sv oricatmostop.vhd divn.vhd oricram.vhd oricatmos.vhd"
 
-MISC_FILE_LIST="oricatmos.pcf oricatmos.cst mk_oric.sh divn.vhd tristate.v yo_gowin.txt yo_ice40.txt sim_main_vhdl.cpp frame_grab.cpp frame_grab.h rom/BASIC10.vhd"
+MISC_FILE_LIST="oricatmos.pcf oricatmos.cst mk_oric.sh divn.vhd tristate.v yo_gowin.txt yo_ice40.txt sim_main_vhdl.cpp frame_grab.cpp frame_grab.h oric_test.asm mk_rom.py"
 
 FILE_LIST="$MISC_FILE_LIST $VHDL_FILE_LIST"
 

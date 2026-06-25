@@ -1,5 +1,5 @@
 #include <iostream>
-#include "oricatmos_sim.h"
+#include "cpu_ula_sim.h"
 
 // 4 .vcd
 #include <cxxrtl/cxxrtl_vcd.h>
@@ -459,6 +459,7 @@ int main(int argc, char *argv[]) {
 	set_reset(top, false);
       }
 
+    // TODO: we need to make less printouts or frame dump will take ludicrous time
     std::cout << "[CYKEL " << cycle << "] Tickar hårdvaruklockan..." << std::endl;
 
     cout << "ADDR=" << as_hex4(cpu_addr) << ":" << as_hex2(cpu_di) << as_hex2(cpu_do) << endl;
@@ -472,15 +473,8 @@ int main(int argc, char *argv[]) {
     // This is the positiv edge of main clock
     if (do_frames)
       {
-	cerr << "Frames currently not working one has to find the instance of the ula in the mess" << endl;
-	cerr << "The AI has locked itself into a room in the cellar and its passing out" << endl;
-	cerr << "helpful notes through the food-hatch but I think it is really just in there" << endl;
-	cerr << "eating ice cream. It has done so before." << endl;
-	exit(1);
-	  
-	
 	// TODO: this frame dumping nightmare just has to wait
-	/*	auto& fula = top.cell_p_oric.cell_p_inst__ula;
+	auto& fula = top.cell_p_oric.cell_p_inst__ula;
 	
 	vcap.process_step(!fula.p_hsync.get<bool>(),
 			  !fula.p_vsync.get<bool>(),
@@ -488,7 +482,7 @@ int main(int argc, char *argv[]) {
 			  fula.p_g.get<bool>(),
 			  fula.p_clk__pix.get<bool>()
 			  );
-	*/
+	
       }
     
     if (do_vcd) {

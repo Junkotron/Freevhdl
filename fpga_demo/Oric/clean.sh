@@ -17,7 +17,7 @@ if [ -e Oric_MiSTer ]; then
     chmod u+w old/*
     
     
-    mv sim_oricatmos *.o *.cpp *.h *.vcd work-obj*.cf mk_oric.sh *.rtlil *.json *~ *.bin *.asc *.fs old/
+    mv sim_oricatmos *.rom *.o *.cpp *.h *.vcd work-obj*.cf mk_oric.sh *.rtlil *.json *~ *.bin *.asc *.fs old/
 
     popd
 

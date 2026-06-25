@@ -4,7 +4,7 @@ signals = {}
 current_time = "0"
 
 # 2. Öppna och läs filen rad för rad
-with open("filtered.vcd", "r") as f:
+with open("waveforms.vcd", "r") as f:
     for line in f:
         line = line.strip()
         if not line:
