@@ -1,0 +1,27 @@
+
+So the makefile failed you and its brand-new hipster icons burned
+holes into the carpet and now you are here.
+
+Well this was the original scripts they are actually quite terrible
+but at least the used to work.
+
+To engage these artrocities MOVE them UP one directory i.e.
+> mv *.sh ..
+
+
+Then to build the simulation:
+
+./checkout_and_build_6502_sim.sh
+
+...
+
+To build all platforms for the targets:
+
+./checkout_and_build_6502.sh
+
+
+Simulating via cxxrtl is not supprted here and never will be
+if the makefile permanetly refuses there are some toy examples
+on how to use it in the other demo directories around here
+
+

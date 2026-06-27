@@ -16,28 +16,33 @@ entity top_t65_system is
 
     led1 : out std_logic;
     led2 : out std_logic;
-  
-    atest : out std_logic
-  );
+
+    -- used for scope on real silicon
+    atest : out std_logic;
+
+    -- Used to monitor from simulator, scrapped in silicon top module
+    addrlo : out std_logic_vector(7 downto 0);
+    addrhi : out std_logic_vector(7 downto 0);
+    cpu_rw_n    : out std_logic;
+    cpu_addr    : out std_logic_vector(23 downto 0);
+    cpu_data_in : out std_logic_vector(7 downto 0);
+    cpu_data_out: out std_logic_vector(7 downto 0);
+    reset_n: out std_logic
+
+    );
 end entity top_t65_system;
 
 architecture rtl of top_t65_system is
 
-  -- 1. Deklarera T65-komponenten (Standard Open-Core T65)
-  -- removed
-  
-  -- 2. Deklarera vår latch-fria startup-reset
-  --
+  signal cpuclk_last : std_logic := '0';
+  signal cpu_strobe  : std_logic := '0';
   
   -- Interna signaler för att binda ihop CPU, Reset och Minne
   signal s_reset_n     : std_logic;
-  signal cpu_rw_n    : std_logic;
-  signal cpu_addr    : std_logic_vector(23 downto 0);
-  signal cpu_data_in : std_logic_vector(7 downto 0);
-  signal cpu_data_out: std_logic_vector(7 downto 0);
-
-  signal addrlo : std_logic_vector(7 downto 0);
-  signal addrhi : std_logic_vector(7 downto 0);
+  signal s_cpu_rw_n    : std_logic;
+  signal s_cpu_addr    : std_logic_vector(23 downto 0);
+  signal s_cpu_data_in : std_logic_vector(7 downto 0);
+  signal s_cpu_data_out: std_logic_vector(7 downto 0);
   
   -- Ett enkelt internt minne (ROM) fyllt med 6502-maskinkod
   type rom_type is array (0 to 31) of std_logic_vector(7 downto 0);
@@ -106,15 +111,33 @@ begin
   -- it seems
   a <= DEBUG.A;
   
-  addrlo <= cpu_addr(7 downto 0);
-  addrhi <= cpu_addr(15 downto 8);
+  addrlo <= s_cpu_addr(7 downto 0);
+  addrhi <= s_cpu_addr(15 downto 8);
+  cpu_rw_n <= s_cpu_rw_n;
+  cpu_addr <= s_cpu_addr;
+  cpu_data_in <= s_cpu_data_in;
+  cpu_data_out <= s_cpu_data_out; 
+  reset_n <= s_reset_n;
   
 --  atest <= cpu_addr(1);
 --  atest <= cpu_data_in(1);
   atest <= reg_leds(0);
   led1 <= reg_leds(0);
   led2 <= reg_leds(1);
-  
+
+  process(clk_in)
+  begin
+    if rising_edge(clk_in) then
+      cpuclk_last <= cpuclk; -- Spara förra cykelns klockvärde
+      
+      -- 🚨 FLANKDETEKTION: Om klockan var 0 förra cykeln men är 1 nu, har vi en positiv flank!
+      if cpuclk_last = '0' and cpuclk = '1' then
+        cpu_strobe <= '1'; -- Hög under exakt en 100MHz-cykel
+      else
+        cpu_strobe <= '0';
+      end if;
+    end if;
+  end process;
   
   -- obtain 25MHz for 6502... the important thing is that the memory
   -- handler is quicker
@@ -148,42 +171,46 @@ begin
     PORT MAP(
       Mode => "00",
       Res_n => s_reset_n,       -- Styrs av vår säkra startup-reset
-      Enable => '1',
-      Clk => cpuclk,
+      Enable => cpu_strobe,
+      Clk => clk_in,
       Rdy => '1',
       Abort_n => '1',
       IRQ_n => '1',
       NMI_n => '1',
       SO_n => '1',
-      R_W_n => cpu_rw_n,
-      A => cpu_addr,
-      DI => cpu_data_in,
-      DO => cpu_data_out,
+      R_W_n => s_cpu_rw_n,
+      A => s_cpu_addr,
+      DI => s_cpu_data_in,
+      DO => s_cpu_data_out,
       DEBUG => DEBUG
       );
 
-  -- Synkron minneshantering och I/O (Helt fritt från dolda latchar)
+
+
+
+-- Synkron minneshantering och I/O (Helt fritt från dolda latchar)
+--  process(clk_in)
   process(clk_in)
     variable rom_index : integer;
   begin
     if rising_edge(clk_in) then
       if s_reset_n = '0' then
-        cpu_data_in <= X"00";
+        s_cpu_data_in <= X"00";
         reg_leds    <= X"00";
       else
         -- Standardvärde på databuss in till CPU för att undvika flytande tillstånd
-        cpu_data_in <= X"EA"; -- NOP instruktion som fallback
+        s_cpu_data_in <= X"EA"; -- NOP instruktion som fallback
 
         -- 1. Avkoda Reset Vector ($FFFC - $FFFD) samt ROM ($F000 - $F007)
-        if cpu_addr(15 downto 4) = X"FFF" or cpu_addr(15 downto 5) = "11110000000" then
+        if s_cpu_addr(15 downto 4) = X"FFF" or s_cpu_addr(15 downto 5) = "11110000000" then
           -- Räkna ut index i vår lilla 32-bytes array
-          rom_index := to_integer(unsigned(cpu_addr(4 downto 0)));
-          cpu_data_in <= my_rom(rom_index);
+          rom_index := to_integer(unsigned(s_cpu_addr(4 downto 0)));
+          s_cpu_data_in <= my_rom(rom_index);
           
         -- 2. Avkoda I/O-port för lysdioder (Skrivning till adress $4000)
-        elsif cpu_addr(15 downto 0) = X"4000" then
-          if cpu_rw_n = '0' then -- CPU skriver
-            reg_leds <= cpu_data_out;
+        elsif s_cpu_addr(15 downto 0) = X"4000" then
+          if s_cpu_rw_n = '0' then -- CPU skriver
+            reg_leds <= s_cpu_data_out;
           end if;
         end if;
       end if;

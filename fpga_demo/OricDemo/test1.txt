@@ -1,0 +1,49 @@
+
+
+två knappar (s1 och s2)
+med adress S1 och S2
+s1 leverar "01h" på S1 om knappen är uppe
+s1 leverar "00h" om S1 knappen är nere
+
+s2 ser inte processorn, den läser vi i
+simulatorn var 50000 varv eller så
+när s2 trycks ner görs ett snapshot
+
+
+Programmet:
+
+   lda #$00 ; ladda acc med 0
+   sta C   ; Säkerställ att vi startar med värde noll på out register
+   
+A: lda #$aa ; ladda acc med 0xaa
+   sta C   ; skriv "aa" till out register
+   lda S1  : läs knapp S1
+   cmp 1   ; är knappen nedtryckt?
+   beq A   ; hoppa till A om knappen ej nere annars till B
+
+B: lda #$bb ; ladda acc med 0xbb
+   sta C    ; skriv "bb" till out register
+   jmp B:   ; hoppa ovillkorligen till B
+
+
+Test:
+
+rm snapshots
+./sim  (kallstart)
+Kolla att C får "aa" skrivet => annars FAIL
+tryck på knapp s2, snapshot tas, sim avslutar
+./sim (varmstart runt A)
+kolla att C fortfarande får "aa" skrivet annars => FAIL
+bryt sim (t.ex genom att trycka på s2)
+
+rm snapshots
+./sim (kallstart)
+Kolla att C får "aa" skrivet => FAIL
+tryck på knapp s1 
+Kolla att C nu får "bb" skrivet => annars FAIL
+tryck på knapp s2, snapshot tas, sim avslutar
+./sim (varmstart nu runt B)
+Kolla att C nu fortfarande får "bb" skrivet annars => FAIL
+bryt sim (t.ex genom att trycka på s2)
+
+Kommer vi ända hit är det => PASS

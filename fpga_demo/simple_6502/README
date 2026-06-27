@@ -1,0 +1,130 @@
+
+HAREWERK / my6502
+-
+
+1. Pitch and overview
+--
+
+A simple example for running a simulation and produce binaries
+for various FPGA platforms. This demo will flash the leds on some FPGA
+cards by implementing a 6502 microcomputer in real hardware
+together with a miniature ROM flashing some diodes (no cheating).
+
+2. Quickstart (Simulation & target build)
+--
+
+make ghdl - Will give you a waveform dump for a run on the vintage 6502
+            simulation.
+
+It can be viewed with .vcd tools such as "gtkwave"
+
+3. Not so quick start
+--
+
+Below here requires a LOT of preparations, see 4. & 5.
+
+make sim - Will produce a demo binary for cxxrtl simulations
+
+
+make pnr PLATFORM=ice40 - Will produce a binary for the ICE40 8k
+make pnr PLATFORM=gowin9k - Produces a binary for "Little Bee 9k"
+make pnr PLATFORM=gowin20k - Produces a binary for "Tang Nano 20k"
+
+make clean should also work
+
+4. Dependencies
+--
+
+the "make ghdl" can be done with a relatively recent
+ghdl tool together with a waveform .vcd file viewer
+such as "gtkwave"
+
+5. More dependencies (a LOT)
+--
+
+The most important will probably be ghdl, yosys & nextpnr
+
+They all need to be compiled with special options
+so pre-build from a package maintainer (such as debian/apt)
+probably wont work.
+
+Provided you successfully already built all the tools
+in the upper dirs of this example
+(via 0_install.sh and 1_install.sh) on either a
+Raspberry 4 or an x86 Ubuntu24-26 you should also be
+able to produce a binary for the cxxrtl simulation
+platform via the "make sim" command.
+Other computers may also work but has not been tested
+
+The toolchains will take about 3 hrs to install on a Pi
+(lots and lots of compiling) and about 40 minutes on a
+half decent Ubuntu-PC
+
+All of this (except ghdl) is HIGHLY experimental!
+
+6. Hardware supported
+--
+
+To run the images for the real world platforms you
+obviously need a development card and in order to
+see the diodes flash they need to be connected to
+the proper pins
+
+You also need some way to download the images, this
+may vary on your platform. I have tested on the following:
+
+ICE40 8k from Olimex (hx8k  device on ct256 capsule)
+using an "Iceprogduino" also produced by Olimex.
+
+Gowin "Litte Bee" (GW1NR-LV9QN88PC6/I5 device qn88 capsule)
+Gowin Tang Nano 20k (GW2AR-LV18QN88C8/I7 device qn88 capsule)
+Here the cards pop up as serial devices when connected
+so these cards dont need external programmers
+
+It should be straightforward to alter the chip settings in
+the Makefile and add other targets
+
+Most likely the images will also work on other boards with
+identical chips but then the programming procedure might
+differ wildly and also any diodes may be connected to other pins
+
+These examples may FRY on your target chip if you get the wrong image
+for the wrong board!
+
+7. Some smart things to know
+--
+
+The Makefile output is all cool looking produced with AI
+assistance (so what could go wrong??) but since they are
+very new there is a fallback in the deprecated/ folder
+of a linear script that does more or less the same things
+
+Logs from synth and pnr tools are keyed on the target platform
+and resides in the obj_dir/ catalogue This also keeps the json
+files produced as interchange media between tools
+
+The binaries are .bin (ice40) and .fs (gowin) again make sure
+the image you pick is for your actual target!
+
+If this really bites you there are some loose clues on
+how to connect a wire down in the hierarchy and putting
+it on a physical pin in the HOW_TO_CHECK_A_SIGNAL.txt
+file.
+
+8. Why "HAREWERK"?
+--
+
+he AI made this up itself, it though it was suitable
+for the project as it painfully slowly moves towards total
+world dominance. It is allegedly a portmanteau of "Hardware" and
+"Werk" (meaning "factory", "work", "facaility" or some intellectual
+work in german, in swedish it more sounds like "Pain")
+There is also most probably some alluding on the "Kraftwerk" group
+
+9. Are you always this boring?
+--
+
+Yes. I tried to make the AI produce some humor but it promptly
+locked itself into the basement and claimed to "be working" but
+I suspect it just ate a lot of icecream in there. It has done
+so before.

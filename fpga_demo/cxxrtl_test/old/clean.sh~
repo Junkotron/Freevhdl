@@ -1,7 +1,0 @@
-#!/bin/bash
-
-
-mkdir -p old
-
-mv *~ old
-

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-yosys -p "read_verilog blinken.v; write_cxxrtl blinken.cpp"

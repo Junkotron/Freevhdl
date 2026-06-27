@@ -62,17 +62,19 @@ help: ## Visar denna interaktiva hjälpmeny
 	@echo "========================================================================"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-18s\033[0m %s\n", $$1, $$2}'
 
-all: sim $(BIN_INJECT) ## Kompilerar ALLA tillgängliga simulator-targets i labbet
+all: sim inject ## Kompilerar ALLA tillgängliga simulator-targets i labbet
 
 sim: $(BIN_SIM) ## Standardmål: Bygger huvudsimulatorn (fullmaskinen)
+
+inject: $(BIN_INJECT) ## Standardmål: Bygger inject maskinen
 
 # =============================================================================
 # 3. AUTOMATISK KLONING
 # =============================================================================
 checkout-and-clean:
 	$(Q)if [ ! -d $(CLONE_DIR) ]; then \
-		echo "-> Hittade inte källkoden. Klonar nikiiv/Oric_MiSTer..."; \
-		git clone https://github.com $(CLONE_DIR); \
+		echo "-> Hittade inte källkoden. Klonar MiSTer-devel/Oric_MiSTer..."; \
+		git clone https://github.com/MiSTer-devel/Oric_MiSTer.git $(CLONE_DIR); \
 	fi
 	@echo "-> Rensar dolda GHDL-cachefiler lokalt..."
 	$(Q)rm -rf work-obj*.cf *.cf
@@ -121,24 +123,30 @@ $(GEN_OBJ): $(GEN_CPP)
 # =============================================================================
 # 6. BLIXTSNABB SLUTLÄNKNING
 # =============================================================================
-$(BIN_SIM): $(GEN_OBJ) oric_sim_main.cpp frame_grab.cpp ## Bygger fullmaskinen mot det frysta hårdvaruobjektet
+$(BIN_SIM): $(GEN_OBJ) oric_sim_main.cpp frame_grab.cpp  snapshot_utils.cpp ## Bygger fullmaskinen mot det frysta hårdvaruobjektet
 	@echo "-> Blixtlänkar din simulator [$(BIN_SIM)] mot det statiska objektet..."
-	$(Q)$(CXX) $(CXXFLAGS) -I$(CXXRTL_INC) -I. $(GEN_OBJ) oric_sim_main.cpp frame_grab.cpp -o $(BIN_SIM)
+	$(Q)$(CXX) $(CXXFLAGS) -I$(CXXRTL_INC) -I. $(GEN_OBJ) oric_sim_main.cpp frame_grab.cpp \
+	snapshot_utils.cpp -o $(BIN_SIM)
 
-$(BIN_INJECT): $(GEN_OBJ) oric_sim_inject.cpp ## Bygger CPU-injektionstarget (skugg-ROM / registrering uppifrån)
+$(BIN_INJECT): $(GEN_OBJ) oric_sim_inject.cpp snapshot_utils.cpp ## Bygger CPU-injektionstarget (skugg-ROM / registrering uppifrån)
 	@echo "-> Blixtlänkar CPU-injektionstarget [$(BIN_INJECT)]..."
-	$(Q)$(CXX) $(CXXFLAGS) -I$(CXXRTL_INC) -I. $(GEN_OBJ) oric_sim_inject.cpp -o $(BIN_INJECT)
+	$(Q)$(CXX) $(CXXFLAGS) -I$(CXXRTL_INC) -I. $(GEN_OBJ) oric_sim_inject.cpp \
+	snapshot_utils.cpp retro_monitor.cpp -o $(BIN_INJECT)
 
 # =============================================================================
 # 7. REGLER FÖR SANERING (Kliniskt ren arbetsmiljö!)
 # =============================================================================
-clean: ## Sanerar källkodsträdet (tar bort binärer, .o, .rtlil, bilder, work-filer)
-	@echo "-> Snyggar till i labbet och slänger temporärt skräp..."
-	$(Q)rm -f $(BIN_SIM) $(BIN_INJECT)
-	$(Q)rm -f cpu_ula_sim.cc cpu_ula_sim.h cpu_only_sim.cc cpu_only_sim.h vcpu_ula_sim.cpp Vcpu_ula_sim.h $(GEN_OBJ)
-	$(Q)rm -f *.rtlil *.o
+cclean: ## Sanerar bara det som har att göra med dom icke-genererade C-filerna
+	@echo "-> Snyggar till lite grann och slänger binärerna och körfiler..."
 	$(Q)rm -f oric_registers.snapshot oric_ram.bin
 	$(Q)rm -f frame_*.png frame_*.ppm
+	$(Q)rm -f $(BIN_SIM) $(BIN_INJECT)
+
+
+clean: cclean ## Sanerar källkodsträdet (tar bort binärer, .o, .rtlil, bilder, work-filer)
+	@echo "-> Snyggar till i labbet och slänger temporärt skräp..."
+	$(Q)rm -f cpu_ula_sim.cc cpu_ula_sim.h cpu_only_sim.cc cpu_only_sim.h vcpu_ula_sim.cpp Vcpu_ula_sim.h $(GEN_OBJ)
+	$(Q)rm -f *.rtlil *.o
 	$(Q)rm -rf work-obj*.cf work/
 	@echo "🔥 Källkodsträdet är kliniskt rent!"
 
