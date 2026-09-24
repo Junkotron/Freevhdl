@@ -1,0 +1,18 @@
+# Ignorera kopierade nikiiv-filer (hämtas via setup-skriptet)
+nikiiv_src/
+oric_cxxrtl_sandbox/
+
+# Ignorera GHDL-databasen
+*.cf
+
+# Ignorera Yosys-genererad C++-kod
+oricatmos_sim.cpp
+oricatmos_sim.h
+
+# Ignorera den slutgiltiga binären och objektfiler
+sim_oricatmos
+*.o
+
+# Ignorera backupfiler från texteditorer
+*~
+.*~
