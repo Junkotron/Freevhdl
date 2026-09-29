@@ -1,0 +1,1 @@
+Use docker.sh as root, when done use 0_ and 1_ install as usual from the repo checkout

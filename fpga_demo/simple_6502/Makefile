@@ -175,11 +175,13 @@ help:
 	@echo "   make pnr           : Isolerat PnR-steg! Kör placering utifrån färdig JSON."
 	@echo "=================================================================="
 
-init: Oric_MiSTer
+init:
 	$(Q)if [ ! -d "Oric_MiSTer" ]; then \
 		echo "🌐 [GIT] Hämtar MiSTer T65 från master-branchen..."; \
-		git clone --depth 1 -b master https://github.com Oric_MiSTer; \
+		git clone https://github.com/MiSTer-devel/Oric_MiSTer.git; \
 	fi
+
+
 
 
 # ------------------------------------------------------------------------

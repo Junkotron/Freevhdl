@@ -11,6 +11,33 @@
 #include "util/logger.hpp"
 #include "util/argsparser.hpp"
 
+void monitor_irq_edges(bool current_state, unsigned long long step_counter, uint16_t pc) {
+  static bool last_state = false;
+  static bool initialized = false;
+
+  if (!initialized) {
+    last_state = current_state;
+    initialized = true;
+    std::cout << "🔍 [IRQ MONITOR] Initialtillstånd vid start: "
+	      << (current_state ? "HIGH (1)" : "LOW (0)")
+	      << " | Steg: " << step_counter
+	      << " | PC: $" << std::hex << pc << std::dec << "\n";
+    return;
+  }
+
+  if (current_state != last_state) {
+    std::cout << "⚡ [IRQ FLANK] Förändring: "
+	      << (last_state ? "HIGH (1)" : "LOW (0)") << " ➔ "
+	      << (current_state ? "HIGH (1)" : "LOW (0)")
+	      << " | Steg: " << std::dec << step_counter
+	      << " | PC: $" << std::hex << pc << std::dec << "\n";
+    last_state = current_state;
+  }
+}
+
+
+
+
 int main(int argc, char* argv[]) {
 
   // Svart bälte i gemensamma flaggor (-v och -n tas om hand här!)
@@ -101,19 +128,8 @@ int main(int argc, char* argv[]) {
                 breakpoint_triggered = true;
             }
 
-            // 🎯 🎉 VÅR NYA BINGO-AVBROTTSDETEKTOR!
-            // Tack vare att du gömde understrecks-trasslet i oric_rig.cpp, läser vi bara signalen direkt!
-            if (rig.get_via_irq()) {
-                std::cout << "\n🎉 🎉 BINGO! Den äkta VHDL-timern 'oureasytofindinterrupt' slog precis om till IRQ!\n"
-                          << "👉 CPU Instruktion #" << std::dec << step_counter 
-                          << " | PC: $" << std::hex << inst_pc << "\n";
-                
-                // Om du vill att simulatorn ska tvärstanna här så du kan stega manuellt efter avbrottet,
-                // avkommentera bara raden under:
-                // breakpoint_triggered = true; 
-            }
-
-	    
+	    // 🎯 Kör övervakaren på varje SYNC (eller varje klockcykel om du föredrar det)
+	    monitor_irq_edges(rig.get_via_irq(), step_counter, inst_pc);
             // Debugger-handbromsen vid träff
             if (breakpoint_triggered) {
                 std::cout << "--- [KMV DEBUGGER] Tryck ENTER för nästa CPU-steg ---";

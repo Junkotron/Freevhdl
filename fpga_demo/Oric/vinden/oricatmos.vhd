@@ -58,10 +58,10 @@ ENTITY oricatmos IS
 		PSG_OUT_A : OUT UNSIGNED(11 DOWNTO 0);
 		PSG_OUT_B : OUT UNSIGNED(11 DOWNTO 0);
 		PSG_OUT_C : OUT UNSIGNED(11 DOWNTO 0);
-                PSG_OUT   : OUT UNSIGNED(13 DOWNTO 0);
+      PSG_OUT   : OUT UNSIGNED(13 DOWNTO 0);
 		
 		VIDEO_CLK : OUT STD_LOGIC;
-	        VIDEO_R : OUT STD_LOGIC;
+	VIDEO_R : OUT STD_LOGIC;
 		VIDEO_G : OUT STD_LOGIC;
 		VIDEO_B : OUT STD_LOGIC;
 		VIDEO_HBLANK : OUT STD_LOGIC;
@@ -138,11 +138,7 @@ ENTITY oricatmos IS
 		save_halt       : IN  STD_LOGIC := '0';
 		save_halted     : OUT STD_LOGIC;
 		cpu_regs_q      : OUT STD_LOGIC_VECTOR(63 DOWNTO 0);
-
-                cpu_dbus_debug  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
-                cpu_irq_debug   : OUT STD_LOGIC;
-
-                via_snap_q      : OUT STD_LOGIC_VECTOR(136 DOWNTO 0);
+		via_snap_q      : OUT STD_LOGIC_VECTOR(136 DOWNTO 0);
 		ay_snap_rd_addr : IN  STD_LOGIC_VECTOR(3 DOWNTO 0) := (OTHERS => '0');
 		ay_snap_rd_q    : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
 		ay_snap_creg_q  : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
@@ -171,8 +167,7 @@ ENTITY oricatmos IS
 		-- notifies the streamer before the ROM starts raw byte reads.
 		tape_byte_enable : IN  STD_LOGIC := '0';
 		tap_sync_request : OUT STD_LOGIC;
-		tap_byte_consume : OUT STD_LOGIC;
-                cpu_sync_out : out STD_LOGIC
+		tap_byte_consume : OUT STD_LOGIC
 	);
 END;
 
@@ -483,27 +478,27 @@ BEGIN
 			data => ROM_1_DO
 		);
 
-	-- inst_rom_pravetz : ENTITY work.PRAVETZ8D -- Pravetz 8D ROM
-	-- 	PORT MAP(
-	-- 		clk => CLK_IN,
-	-- 		addr => cpu_ad(13 DOWNTO 0),
-	-- 		data => ROM_PRAVETZ_DO
-	-- 	);
+	inst_rom_pravetz : ENTITY work.PRAVETZ8D -- Pravetz 8D ROM
+		PORT MAP(
+			clk => CLK_IN,
+			addr => cpu_ad(13 DOWNTO 0),
+			data => ROM_PRAVETZ_DO
+		);
 
-	-- inst_rom_pravetz_fdc : ENTITY work.PRAVETZ8D_FDC -- Pravetz 8D FDC bank ROM
-	-- 	PORT MAP(
-	-- 		clk => CLK_IN,
-	-- 		bank => pravetz_bank,
-	-- 		addr => cpu_ad(7 DOWNTO 0),
-	-- 		data => ROM_PRAVETZ_BANK_DO
-	-- 	);
+	inst_rom_pravetz_fdc : ENTITY work.PRAVETZ8D_FDC -- Pravetz 8D FDC bank ROM
+		PORT MAP(
+			clk => CLK_IN,
+			bank => pravetz_bank,
+			addr => cpu_ad(7 DOWNTO 0),
+			data => ROM_PRAVETZ_BANK_DO
+		);
 
-	-- inst_rom2 : ENTITY work.ORICDOS06 -- Microdisc ROM
-	-- 	PORT MAP(
-	-- 		clk => CLK_IN,
-	-- 		addr => cpu_ad(12 DOWNTO 0),
-	-- 		data => ROM_MD_DO
-	-- 	);
+	inst_rom2 : ENTITY work.ORICDOS06 -- Microdisc ROM
+		PORT MAP(
+			clk => CLK_IN,
+			addr => cpu_ad(12 DOWNTO 0),
+			data => ROM_MD_DO
+		);
 
 
 
@@ -660,31 +655,31 @@ BEGIN
 	KEYB_RESETn <= NOT swrst;
 
         
-	-- inst_pravetz_fdc : ENTITY work.PRAVETZ8D_FDC_CTRL
-	-- PORT MAP(
-	-- 	clk_sys => CLK_IN,
-	-- 	reset => NOT RESETn,
-	-- 	phi2 => ula_PHI2,
-	-- 	A => cpu_ad(15 DOWNTO 0),
-	-- 	DI => cpu_do,
-	-- 	DO => pravetz_fdc_DO,
-	-- 	fdc_select => pravetz_fdc_select,
-	-- 	img_mounted => img_mounted,
-	-- 	img_wp => img_wp,
-	-- 	img_size => img_size,
-	-- 	sd_lba_fd0 => pravetz_sd_lba_fd0,
-	-- 	sd_lba_fd1 => pravetz_sd_lba_fd1,
-	-- 	sd_rd => pravetz_sd_rd,
-	-- 	sd_wr => pravetz_sd_wr,
-	-- 	sd_ack => sd_ack(1 DOWNTO 0),
-	-- 	sd_buff_addr => sd_buff_addr,
-	-- 	sd_dout => sd_dout,
-	-- 	sd_din_fd0 => pravetz_sd_din_fd0,
-	-- 	sd_din_fd1 => pravetz_sd_din_fd1,
-	-- 	sd_dout_strobe => sd_dout_strobe,
-	-- 	fdd_busy => pravetz_fdd_busy,
-	-- 	fd_led => pravetz_fd_led
-	-- );
+	inst_pravetz_fdc : ENTITY work.PRAVETZ8D_FDC_CTRL
+	PORT MAP(
+		clk_sys => CLK_IN,
+		reset => NOT RESETn,
+		phi2 => ula_PHI2,
+		A => cpu_ad(15 DOWNTO 0),
+		DI => cpu_do,
+		DO => pravetz_fdc_DO,
+		fdc_select => pravetz_fdc_select,
+		img_mounted => img_mounted,
+		img_wp => img_wp,
+		img_size => img_size,
+		sd_lba_fd0 => pravetz_sd_lba_fd0,
+		sd_lba_fd1 => pravetz_sd_lba_fd1,
+		sd_rd => pravetz_sd_rd,
+		sd_wr => pravetz_sd_wr,
+		sd_ack => sd_ack(1 DOWNTO 0),
+		sd_buff_addr => sd_buff_addr,
+		sd_dout => sd_dout,
+		sd_din_fd0 => pravetz_sd_din_fd0,
+		sd_din_fd1 => pravetz_sd_din_fd1,
+		sd_dout_strobe => sd_dout_strobe,
+		fdd_busy => pravetz_fdd_busy,
+		fd_led => pravetz_fd_led
+	);
 
 	inst_microdisc : entity work.Microdisc
 	PORT MAP(
@@ -849,9 +844,5 @@ BEGIN
 			cpu_di <= SRAM_DO;
 		END IF;
 	END PROCESS;
-        cpu_dbus_debug <= cpu_di; -- Drar ut bussen direkt från hästens mun!
-        cpu_irq_debug <= cpu_irq;
-        
-        cpu_sync_out <= cpu_sync;
 
 END RTL;

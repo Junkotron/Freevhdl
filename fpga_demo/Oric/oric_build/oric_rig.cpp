@@ -159,7 +159,8 @@ bool OricRig::load_rom_image(const std::string& filename, uint16_t start_addr) {
 
     // Aktivera förladdnings-gränssnittet i hårdvaran
     set_rom_preload_we(ctx, true);
-
+    ctx->top->step();
+    
     // Klocka in varenda byte sekventiellt
     for (size_t i = 0; i < buffer.size(); i++) {
         uint16_t current_target = start_addr + i;
@@ -168,6 +169,8 @@ bool OricRig::load_rom_image(const std::string& filename, uint16_t start_addr) {
         set_rom_preload_di(ctx, buffer[i]);
 
         // Trigger stigande kant på masterklockan så att din bram_48k nyper byten
+	ctx->top->step();
+	
         clock_master_high();
         clock_master_low();
     }
@@ -177,6 +180,8 @@ bool OricRig::load_rom_image(const std::string& filename, uint16_t start_addr) {
     set_rom_preload_addr(ctx, 0);
     set_rom_preload_di(ctx, 0);
 
+    ctx->top->step();
+    
     // Ett litet extra tomsteg för att stabilisera signalerna
     clock_master_high(); clock_master_low();
 

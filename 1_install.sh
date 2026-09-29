@@ -19,6 +19,10 @@ sudo apt-get autoclean -y
 sudo apt -y install curl
 sudo apt -y install openssh-server net-tools
 
+# Some tools for Oric example in fpga_demo
+sudo apt -y install xxd xa65
+
+
 # take a backup before yosys & chums
 # begin to dilly-dally here
 

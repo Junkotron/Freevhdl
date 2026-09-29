@@ -164,3 +164,105 @@ emu_6502: $(MJUKIS_OBJS)
 # --- ROM-KONVERTERARE (make romconv) ---
 romconv: util/rom_parser.cpp
 	$(CXX) $(CXXFLAGS) util/rom_parser.cpp -o util/rom_parser
+
+
+# =====================================================================
+# 🧪 MÅL FÖR HÅRDVARUTESTER (VHDL TESTBENCH)
+# =====================================================================
+
+# Verktyg för VHDL-simulering
+GHDL = ghdl
+GHDL_FLAGS = --std=08 # Vi använder VHDL-2008 för modern och ren kod (t.ex. to_string)
+
+.PHONY: test test_clean
+
+test: test_clean
+	@echo "🔍 [GHDL] Analyserar VHDL-filer..."
+	$(GHDL) -a $(GHDL_FLAGS) bram_generic.vhd
+	$(GHDL) -a $(GHDL_FLAGS) bram_rom.vhd
+	$(GHDL) -a $(GHDL_FLAGS) bram_rom_tb.vhd
+	@echo "🔨 [GHDL] Elaborerar testbänk..."
+	$(GHDL) -e $(GHDL_FLAGS) bram_rom_tb
+	@echo "🏃 [GHDL] Kör hårdvarutest i glaskuben..."
+	$(GHDL) -r $(GHDL_FLAGS) bram_rom_tb --stop-time=1us --max-stack-alloc=1024
+	@echo "✨ [GHDL] Testkörning klar!"
+
+# =====================================================================
+# 🧪 MÅL FÖR HÅRDVARUTESTER (VHDL TESTBENCH)
+# =====================================================================
+
+# Verktyg för VHDL-simulering
+GHDL = ghdl
+GHDL_FLAGS = --std=08 # Vi använder VHDL-2008 för modern och ren kod (t.ex. to_string)
+
+.PHONY: test test_clean test_m6522
+
+test: test_clean
+	@echo "🔍 [GHDL] Analyserar VHDL-filer..."
+	$(GHDL) -a $(GHDL_FLAGS) bram_generic.vhd
+	$(GHDL) -a $(GHDL_FLAGS) bram_rom.vhd
+	$(GHDL) -a $(GHDL_FLAGS) bram_rom_tb.vhd
+	@echo "🔨 [GHDL] Elaborerar testbänk..."
+	$(GHDL) -e $(GHDL_FLAGS) bram_rom_tb
+	@echo "🏃 [GHDL] Kör hårdvarutest i glaskuben..."
+	$(GHDL) -r $(GHDL_FLAGS) bram_rom_tb --stop-time=1us --max-stack-alloc=1024
+	@echo "✨ [GHDL] Testkörning klar!"
+
+# Dedikerat mål för VIA 6502-testbänken
+test_m6522: test_clean
+	@echo "🔍 [GHDL] Analyserar VHDL-filer för M6522..."
+	$(GHDL) -a $(GHDL_FLAGS) $(NIKIIV_DIR)/T65_Pack.vhd
+	$(GHDL) -a $(GHDL_FLAGS) $(NIKIIV_DIR)/m6522.vhd
+	$(GHDL) -a $(GHDL_FLAGS) m6522_tb.vhd
+	@echo "🔨 [GHDL] Elaborerar M6522-testbänk..."
+	$(GHDL) -e $(GHDL_FLAGS) m6522_tb
+	@echo "🏃 [GHDL] Kör VIA-hårdvarutest..."
+	$(GHDL) -r $(GHDL_FLAGS) m6522_tb --stop-time=2us --max-stack-alloc=1024
+	@echo "✨ [GHDL] VIA-testkörning klar!"
+
+test_clean:
+	@echo "🧹 Rensar gamla GHDL-simuleringsfiler..."
+	$(GHDL) --clean
+	rm -f e~bram_rom_tb.o e~m6522_tb.o work-obj08.cf
+
+
+# =====================================================================
+# 🎛️ AUTOMATISERAT TESTRAMVERK FÖR 6502 ASSEMBLER (asmtest/)
+# =====================================================================
+
+ASM6502      = xa
+ASMFLAGS     = -w -c
+
+# De delade hårdvaru-objektfiler som krävs för kiselmodellen [4]
+TEST_REQ_OBJS = oricatmos_sim.o oric_rig.o dasm.o dasm_table.o util/logger.o util/argsparser.o
+
+# Hitta dynamiskt alla domar-C++-filer i mappen asmtest/ [4]
+ASM_CPP_SRCS  = $(wildcard asmtest/*.cpp)
+# Skapa listan över de körbara binärerna [4]
+ASM_TEST_BINS = $(ASM_CPP_SRCS:.cpp=)
+
+.PHONY: test_asm asmtest_clean
+
+# 🎯 1. HUVUDMÅL: Beror nu direkt på att ALLA testbinärer är färskbyggda!
+test_asm: $(ASM_TEST_BINS)
+	@echo "🏃 Startar sekventiell exekvering av 6502-hårdvarutester..."
+	@for test_exe in $(ASM_TEST_BINS); do \
+		echo "📋 Kör testbinär: $$test_exe..."; \
+		./$$test_exe || exit 1; \
+	done
+	@echo "🏆 [SUCCESS] Alla tupler i asmtest/ gick igenom kisel-verifieringen!"
+
+# 🎯 2. STATISK MÖNSTERREGEL: Tvingar fram fullständig beroendekedja!
+# Denna rad säger: För varje mål i $(ASM_TEST_BINS) (t.ex. asmtest/via_timer_test),
+# så BEROR det målet stenhårt på BÅDE sin .cpp-fil OCH sin matchande .asm-fil!
+$(ASM_TEST_BINS): asmtest/%: asmtest/%.cpp asmtest/%.asm $(TEST_REQ_OBJS)
+	@echo "🗜️  Kompilerar 6502-assembler: asmtest/$*.asm -> asmtest/$*.bin"
+	$(ASM6502) $(ASMFLAGS) asmtest/$*.asm -o asmtest/$*.bin
+	@echo "🔧 Länkar fristående testdomare för $*..."
+	$(CXX) $(CXXFLAGS) $< $(TEST_REQ_OBJS) -o $@ $(LDFLAGS)
+
+# Specifik städning för testmappen [4]
+asmtest_clean:
+	@echo "🧹 Rensar bort kompilerade testbinärer och assembler-binfiler..."
+	rm -f asmtest/*.bin
+	rm -f $(ASM_TEST_BINS)
